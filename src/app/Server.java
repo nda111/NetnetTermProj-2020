@@ -1,0 +1,93 @@
+package app;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Scanner;
+
+import data.ERequest;
+import data.User;
+import interaction.IResponse;
+import response.EchoResponse;
+
+
+public class Server {
+	
+	public static final HashMap<ERequest, IResponse> Responses = new HashMap<>(); // 응답 리스
+	
+	public static final HashMap<String, User> Users = new HashMap<>(); // 사용자 리스트
+	
+	public static ServerSocket server = null;
+	
+	public static void main(String[] args) {
+		
+		initResponse();
+		loadUserInfo();
+		
+		try {
+
+			// 포트넘버를 받아온다
+			String Port = null;
+			File file = new File("./server_info.txt");
+			Scanner scanner = new Scanner(file);
+			scanner.nextLine();
+			int port = Integer.parseInt(scanner.nextLine());
+			scanner.close();
+
+			server = new ServerSocket(port);
+			System.out.println("서버준비완료");
+
+			while (true) {
+
+				Socket client = server.accept();
+				
+				ServerResponser handler = new ServerResponser(client); // 스레드 생성
+				handler.start(); // 스레드 시작
+			} // while
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+	
+	private static void initResponse() {
+		
+		// Simple Echo request
+		Responses.put(ERequest.ECHO, new EchoResponse());
+	}
+	
+	private static void loadUserInfo() {
+		
+		File dir = new File(User.UsersPath);
+		File[] userFiles = dir.listFiles();
+		
+		for (File file : userFiles) {
+			
+			try {
+				Scanner reader = new Scanner(file);
+				StringBuilder json = new StringBuilder();
+				
+				while (reader.hasNextLine()) {
+					
+					json.append(reader.nextLine());
+					json.append('\n');
+				}
+				reader.close();
+				
+				User user = User.parseJsonOrNull(json.toString());
+				if (user == null) {
+					
+					throw new Exception("Failed to load user");
+				} else {
+					
+					Users.put(user.uid, user);
+				}
+				
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+		}
+	}
+}
