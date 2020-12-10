@@ -77,32 +77,35 @@ public class Server {
 		File dir = new File(User.UsersPath);
 		File[] userFiles = dir.listFiles();
 		
-		for (File file : userFiles) { // For all user info files in the directory,
-			
-			try {
+		if (userFiles != null) {
 				
-				Scanner reader = new Scanner(file);
-				StringBuilder json = new StringBuilder();
+			for (File file : userFiles) { // For all user info files in the directory,
 				
-				while (reader.hasNextLine()) { // read all lines from the file.
+				try {
 					
-					json.append(reader.nextLine());
-					json.append('\n');
+					Scanner reader = new Scanner(file);
+					StringBuilder json = new StringBuilder();
+					
+					while (reader.hasNextLine()) { // read all lines from the file.
+						
+						json.append(reader.nextLine());
+						json.append('\n');
+					}
+					reader.close();
+					
+					User user = User.parseJsonOrNull(json.toString()); // Then try parse as a JSON object
+					if (user == null) { // If falied to parse,
+						
+						throw new Exception("Failed to load user"); // Throw an exception.
+					} else { // Otherwise,
+						
+						Users.put(user.uid, user); // Put a new user information to the map.
+					}
+					
+				} catch (Exception e) {
+	
+					e.printStackTrace();
 				}
-				reader.close();
-				
-				User user = User.parseJsonOrNull(json.toString()); // Then try parse as a JSON object
-				if (user == null) { // If falied to parse,
-					
-					throw new Exception("Failed to load user"); // Throw an exception.
-				} else { // Otherwise,
-					
-					Users.put(user.uid, user); // Put a new user information to the map.
-				}
-				
-			} catch (Exception e) {
-
-				e.printStackTrace();
 			}
 		}
 	}
