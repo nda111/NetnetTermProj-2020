@@ -57,31 +57,33 @@ public class Server {
 		Responses.put(ERequest.ECHO, new EchoResponse());
 	}
 	
+	// Load all user info from files before the server starts.
 	private static void loadUserInfo() {
 		
 		File dir = new File(User.UsersPath);
 		File[] userFiles = dir.listFiles();
 		
-		for (File file : userFiles) {
+		for (File file : userFiles) { // For all user info files in the directory,
 			
 			try {
+				
 				Scanner reader = new Scanner(file);
 				StringBuilder json = new StringBuilder();
 				
-				while (reader.hasNextLine()) {
+				while (reader.hasNextLine()) { // read all lines from the file.
 					
 					json.append(reader.nextLine());
 					json.append('\n');
 				}
 				reader.close();
 				
-				User user = User.parseJsonOrNull(json.toString());
-				if (user == null) {
+				User user = User.parseJsonOrNull(json.toString()); // Then try parse as a JSON object
+				if (user == null) { // If falied to parse,
 					
-					throw new Exception("Failed to load user");
-				} else {
+					throw new Exception("Failed to load user"); // Throw an exception.
+				} else { // Otherwise,
 					
-					Users.put(user.uid, user);
+					Users.put(user.uid, user); // Put a new user information to the map.
 				}
 				
 			} catch (Exception e) {
