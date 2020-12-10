@@ -3,6 +3,7 @@ package data;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.SocketAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -85,9 +86,9 @@ public final class User {
 	public String password = null;
 	public String name = null;
 	public long birth = -1;
-	public boolean isLoggedIn = false;
+	public SocketAddress userAddress = null;
 	public String personalMessage = null;
-	public long logoutTime = -1;
+	public long signOutTime = -1;
 	
 	public User(int id, String uid, String email, String password, String name, long birth, String personalMessage) {
 		
@@ -108,6 +109,27 @@ public final class User {
 	public User(String uid, String email, String password, String name, long birth) {
 		
 		this(++MaxId, uid, email, hashPassword(password), name, birth, null);
+	}
+	
+	public boolean isSignedIn() {
+		
+		return userAddress != null;
+	}
+	
+	public void signInBy(SocketAddress address) {
+		
+		userAddress = address;
+	}
+	
+	public void signOutNow() {
+		
+		userAddress = null;
+		signOutTime = System.currentTimeMillis();
+	}
+	
+	public boolean certificateByAddress(SocketAddress address) {
+		
+		return this.userAddress.toString().equals(address.toString());
 	}
 	
 	public boolean matchPassword(String password) {

@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.Scanner;
 
 import data.ERequest;
@@ -71,5 +72,10 @@ public class ServerResponser extends Thread {
 			
 			System.out.println(logBuilder.toString());
 		}
+	}
+	
+	public SocketAddress getClientAddress() {
+		
+		return client.getRemoteSocketAddress();
 	}
 }
