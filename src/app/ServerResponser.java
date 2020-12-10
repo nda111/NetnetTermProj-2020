@@ -61,9 +61,13 @@ public class ServerResponser extends Thread {
 			
 			// Act appropriate response
 			final IResponse responser = Server.Responses.get(request);
-			final EResponse response = responser.response(params, reader, writer);
+			final EResponse response = responser.response(params, this, reader, writer);
 			
 			logBuilder.append(response.toString());
+			if (response.getRequest() != request) {
+				
+				logBuilder.append(": RR-mismatch");
+			}
 			
 			System.out.println(logBuilder.toString());
 		}

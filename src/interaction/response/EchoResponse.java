@@ -3,6 +3,7 @@ package interaction.response;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import app.ServerResponser;
 import data.EResponse;
 import interaction.IResponse;
 
@@ -10,7 +11,7 @@ import interaction.IResponse;
 public final class EchoResponse implements IResponse {
 	
 	@Override
-	public EResponse response(String[] params, Scanner reader, PrintWriter writer) {
+	public EResponse response(String[] params, ServerResponser responser, Scanner reader, PrintWriter writer) {
 		
 		final EResponse response = EResponse.ECHO_OK;
 		
