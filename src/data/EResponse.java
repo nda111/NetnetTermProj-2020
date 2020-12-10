@@ -8,7 +8,7 @@ public enum EResponse {
 	// 파라미터로 들어온 값에 해당하는 ERequest 객체를 반환한다.
 	// 알 수 없는 요청이면 null을 반환한다.
 	// ex) value == 0 -> return ECHO
-	public static EResponse valueOf(byte value) {
+	public static EResponse valueOf(short value) {
 		
 		for (EResponse v : EResponse.values()) {
 			
@@ -44,5 +44,11 @@ public enum EResponse {
 		final byte requestId = (byte) (value >> 8);
 		
 		return ERequest.valueOf(requestId);
+	}
+	
+	// 요청에 대해 어떤 응답인지 가져온다.
+	public byte getResponse() {
+		
+		return (byte) (value & 0xFFFFFF);
 	}
 }
