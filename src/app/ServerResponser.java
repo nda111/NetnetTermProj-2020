@@ -41,6 +41,19 @@ public class ServerResponser extends Thread {
 		
 		while (true) {
 			
+			if (!reader.hasNext()) {
+				
+				try {
+					
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+
+					e.printStackTrace();
+				}
+				
+				continue;
+			}
+			
 			final StringBuilder logBuilder = new StringBuilder("RESP, ");
 			logBuilder.append(client.getRemoteSocketAddress().toString());
 			logBuilder.append(", [");
