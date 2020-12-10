@@ -33,6 +33,7 @@ public final class User {
 			String name = (String) json.get("name");
 			long birth = (long) json.get("birth");
 			String personalMessage = (String) json.get("personalMessage");
+			long signOutTime = (long) json.get("signOutTime");
 			
 			JSONArray friendArray = (JSONArray)json.get("friends");
 			HashSet<String> friends = new HashSet<>();
@@ -43,7 +44,9 @@ public final class User {
 				friends.add(friend);
 			}
 			
-			return new User(uid, email, password, name, birth, personalMessage, friends);
+			User user = new User(uid, email, password, name, birth, personalMessage, friends);
+			user.signOutTime = signOutTime;
+			return user;
 			
 		} catch (ParseException e) {
 			
@@ -164,6 +167,7 @@ public final class User {
 		json.put("name", name);
 		json.put("birth", birth);
 		json.put("personalMessage", personalMessage);
+		json.put("signOutTime", signOutTime);
 		json.put("friends", friendArray);
 		
 		return json;
