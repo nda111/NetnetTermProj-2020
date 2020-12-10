@@ -9,7 +9,7 @@ import java.util.Scanner;
 import data.ERequest;
 import data.User;
 import interaction.IResponse;
-import response.EchoResponse;
+import interaction.response.EchoResponse;
 
 
 public class Server {

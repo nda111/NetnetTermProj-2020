@@ -1,10 +1,11 @@
-package response;
+package interaction.response;
 
 import java.io.PrintWriter;
 import java.util.Scanner;
 
 import data.EResponse;
 import interaction.IResponse;
+
 
 public final class EchoResponse implements IResponse {
 	
