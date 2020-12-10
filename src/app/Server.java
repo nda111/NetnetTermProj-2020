@@ -9,7 +9,13 @@ import java.util.Scanner;
 import data.ERequest;
 import data.User;
 import interaction.IResponse;
+import interaction.response.AskFriendResponse;
+import interaction.response.AskUidResponse;
 import interaction.response.EchoResponse;
+import interaction.response.SignInResponse;
+import interaction.response.SignOutResponse;
+import interaction.response.SignUpResponse;
+import interaction.response.ValidateUidResponse;
 
 
 public class Server {
@@ -55,6 +61,14 @@ public class Server {
 		
 		// Simple Echo request
 		Responses.put(ERequest.ECHO, new EchoResponse());
+		
+		// ValidateUid, SignUp, SignIn, SignOut
+		Responses.put(ERequest.VALIDATE_UID, new ValidateUidResponse());
+		Responses.put(ERequest.SIGNUP, new SignUpResponse());
+		Responses.put(ERequest.SIGNIN, new SignInResponse());
+		Responses.put(ERequest.SIGNOUT, new SignOutResponse());
+		Responses.put(ERequest.ASK_UID, new AskUidResponse());
+		Responses.put(ERequest.ASK_FRIEND, new AskFriendResponse());
 	}
 	
 	// Load all user info from files before the server starts.

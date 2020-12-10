@@ -2,8 +2,28 @@ package data;
 
 public enum EResponse {
 
-	ECHO_OK(ERequest.ECHO, (byte)0); // 에코 응답 
-	// TODO: 여기에 다른 응 추가하기 (식별자는 상의해서 규칙을 정합시다.)
+	ECHO_OK(ERequest.ECHO, (byte)0), // 에코 응답
+	
+	VALIDATE_UID_OK(ERequest.VALIDATE_UID, (byte)0), // UID 사용 가능 
+	VALIDATE_UID_NO(ERequest.VALIDATE_UID, (byte)1), // UID 사용 불가능
+	
+	SIGNUP_OK(ERequest.SIGNUP, (byte)0),	// 가입 성공 
+	SIGNUP_ERR(ERequest.SIGNUP, (byte)1), 	// 가입 실패 
+	
+	SIGNIN_OK(ERequest.SIGNIN, (byte)0),			// 로그인 성공 
+	SIGNIN_ERR_PW(ERequest.SIGNIN, (byte)1),		// 로그인 비밀번호 틀
+	SIGNIN_ERR_MULTI(ERequest.SIGNIN, (byte)2),		// 로그인 여러 기기 
+	SIGNIN_ERR_NO_UID(ERequest.SIGNIN, (byte)3),	// 로그인 없는 계정
+	
+	SIGNOUT_OK(ERequest.SIGNOUT, (byte)0),			// 로그아웃 성공 
+	SIGNOUT_ERR_NOT_IN(ERequest.SIGNOUT, (byte)1), 	// 로그아웃 실패 (로그인 한 적 없음)
+	SIGNOUT_ERR(ERequest.SIGNOUT, (byte)2),			// 로그아웃 실패 (그 외 이유)
+
+	ASK_UID_OK(ERequest.ASK_UID, (byte)0),	// 있음
+	ASK_UID_NO(ERequest.ASK_UID, (byte)1),	// 없음 
+	
+	ASK_FRIEND_OK(ERequest.ASK_FRIEND, (byte)0),	// ㅇㅋ 
+	ASK_FRIEND_NO(ERequest.ASK_FRIEND, (byte)1);	// ㄴㄴ 
 
 	// 파라미터로 들어온 값에 해당하는 ERequest 객체를 반환한다.
 	// 알 수 없는 요청이면 null을 반환한다.
