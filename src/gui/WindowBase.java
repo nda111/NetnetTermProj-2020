@@ -3,6 +3,8 @@ package gui;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.Socket;
 
 import javax.swing.JFrame;
@@ -16,6 +18,21 @@ public abstract class WindowBase extends JFrame {
 	public WindowBase(Socket socket) {
 		
 		this.socket = socket;
+		
+		this.addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+
+				if (isRoot()) {
+					
+					System.exit(0);
+				} else {
+
+					backToParent();
+				}
+	        }
+		});
 		
 		configureWindow();
 		initializeGuiComponents((JPanel)this.getContentPane());
@@ -46,13 +63,13 @@ public abstract class WindowBase extends JFrame {
 		win.socket = this.socket;
 		
 		matchCenter(win);
-		
-		setVisible(false);
+
 		win.setVisible(true);
+		setVisible(false);
 		
 		if (newRoot) {
 			
-			this.dispose();
+			disposeAll();
 			win.parent = null;
 		} else {
 			
@@ -65,18 +82,17 @@ public abstract class WindowBase extends JFrame {
 		if (parent != null) {
 
 			matchCenter(parent);
-		
-			setVisible(false);
+
 			parent.setVisible(true);
+			setVisible(false);
 			
 			dispose();
 		}
 	}
 	
-	@Override
-	public void dispose() {
-		
-		super.dispose();
+	public void disposeAll() {
+
+		dispose();
 		
 		if (parent != null) {
 			
