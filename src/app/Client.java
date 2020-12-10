@@ -31,5 +31,8 @@ public class Client {
 			
 			System.exit(0);
 		}
+		
+		SignInWindow window = new SignInWindow(socket);
+		window.setVisible(true);
 	}
 }
