@@ -37,22 +37,35 @@ public class ServerResponser extends Thread {
 		
 		while (true) {
 			
-			ERequest request = ERequest.valueOf(reader.nextByte()); // Recognize request
-			int paramCount = reader.nextInt(); // Get the number of parameters
+			final StringBuilder logBuilder = new StringBuilder("RESP, ");
+			logBuilder.append(client.getRemoteSocketAddress().toString());
+			logBuilder.append(", [");
+			
+			final ERequest request = ERequest.valueOf(reader.nextByte()); // Recognize request
+			final int paramCount = reader.nextInt(); // Get the number of parameters
+			
+			logBuilder.append(request.toString());
+			logBuilder.append(", ");
 			
 			// Receive parameters in string form
-			String[] params = new String[paramCount];
+			final String[] params = new String[paramCount];
 			for (int i = 0; i < paramCount; i++) {
 				
 				params[i] = reader.nextLine();
+				
+				logBuilder.append(params[i]);
+				logBuilder.append(", ");
 			}
+			logBuilder.delete(logBuilder.length() - 3, logBuilder.length() - 1);
+			logBuilder.append("], ");
 			
 			// Act appropriate response
-			IResponse responser = Server.Responses.get(request);
-			EResponse response = responser.response(params, reader, writer);
+			final IResponse responser = Server.Responses.get(request);
+			final EResponse response = responser.response(params, reader, writer);
 			
-			// Send the response result
-			writer.println(response.getValue());
+			logBuilder.append(response.toString());
+			
+			System.out.println(logBuilder.toString());
 		}
 	}
 }

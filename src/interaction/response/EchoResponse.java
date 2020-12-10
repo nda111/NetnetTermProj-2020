@@ -11,12 +11,16 @@ public final class EchoResponse implements IResponse {
 	
 	@Override
 	public EResponse response(String[] params, Scanner reader, PrintWriter writer) {
+		
+		final EResponse response = EResponse.ECHO_OK;
+		
+		writer.println(response.getValue());
 
 		for (String param : params) {
 			
 			writer.println(param);
 		}
 		
-		return EResponse.ECHO_OK;
+		return response;
 	}
 }
