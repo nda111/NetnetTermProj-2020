@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 import data.ERequest;
 import data.EResponse;
+import data.User;
 import interaction.IResponse;
 
 
@@ -18,6 +19,8 @@ public class ServerResponser extends Thread {
 	private Socket client = null;
 	private Scanner reader = null;
 	private PrintWriter writer = null;
+	
+	private User me = null;
 
 	public ServerResponser(Socket client) {
 
@@ -60,22 +63,39 @@ public class ServerResponser extends Thread {
 			logBuilder.delete(logBuilder.length() - 3, logBuilder.length() - 1);
 			logBuilder.append("], ");
 			
-			// Act appropriate response
-			final IResponse responser = Server.Responses.get(request);
-			final EResponse response = responser.response(params, this, reader, writer);
-			
-			logBuilder.append(response.toString());
-			if (response.getRequest() != request) {
+			if (me != null && me.certificateByAddress(this.getClientAddress())) {
+
+				// Act appropriate response
+				final IResponse responser = Server.Responses.get(request);
+				final EResponse response = responser.response(params, this, reader, writer);
 				
-				logBuilder.append(": RR-mismatch");
+				logBuilder.append(response.toString());
+				if (response.getRequest() != request) {
+					
+					logBuilder.append(": RR-mismatch");
+				}
+				
+				System.out.println(logBuilder.toString());
+			} else {
+				
+				writer.println(EResponse.ECHO_OK);
+				System.out.println("RESP, ECHO_OK");
 			}
-			
-			System.out.println(logBuilder.toString());
 		}
 	}
 	
 	public SocketAddress getClientAddress() {
 		
 		return client.getRemoteSocketAddress();
+	}
+
+	public void setMe(User user) {
+	
+		this.me = user;
+	}
+	
+	public User getMeOrNull() {
+		
+		return this.me;
 	}
 }
