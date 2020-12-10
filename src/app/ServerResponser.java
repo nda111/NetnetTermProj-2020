@@ -78,7 +78,7 @@ public class ServerResponser extends Thread {
 				System.out.println(logBuilder.toString());
 			} else {
 				
-				writer.println(EResponse.ECHO_OK);
+				Server.Responses.get(ERequest.ECHO).response(params, this, reader, writer);
 				System.out.println("RESP, ECHO_OK");
 			}
 		}
