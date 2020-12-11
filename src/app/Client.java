@@ -11,6 +11,9 @@ public class Client {
 	
 	public static void main(String[] args) {
 		
+		// For MacOS
+		System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
+		
 		Socket socket = null;
 		String host = null;
 		int port = -1;
