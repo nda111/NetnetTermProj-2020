@@ -137,8 +137,10 @@ public final class SignInWindow extends WindowBase {
 					
 					if (response == EResponse.SIGNIN_OK) {
 						
-						// TODO: Goto main window
 						System.out.println("Signed In: " + uid);
+						
+						MainWindow mainWindow = new MainWindow();
+						switchWindow(mainWindow, true);
 					}
 				}
 			}
