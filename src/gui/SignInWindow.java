@@ -3,7 +3,9 @@ package gui;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -13,6 +15,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import data.ERequest;
+import data.EResponse;
+import interaction.IResponse;
+import interaction.RequestBase;
 
 
 public final class SignInWindow extends WindowBase {
@@ -93,8 +100,46 @@ public final class SignInWindow extends WindowBase {
 					pwTextField.grabFocus();
 				} else {
 
-					// TODO: Request sign in
+					EResponse response = new RequestBase(ERequest.SIGNIN, new String[] { uid, pw }, reader, writer) {
+
+						@Override
+						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+							
+							switch (response) {
+							
+							case SIGNIN_OK:
+								// Empty
+								break;
+								
+							case SIGNIN_ERR_NO_UID:
+								JOptionPane.showMessageDialog(null, "This user name is not registered.");
+								pwTextField.setText("");
+								uidTextField.selectAll();
+								uidTextField.grabFocus();
+								break;
+								
+							case SIGNIN_ERR_PW:
+								JOptionPane.showMessageDialog(null, "You've entered a wrong password.");
+								pwTextField.selectAll();
+								pwTextField.grabFocus();
+								break;
+								
+							case SIGNIN_ERR_MULTI:
+								JOptionPane.showMessageDialog(null, "You signed in on other device.\nIf it's not you, please contact us.");
+								break;
+								
+							default:
+								JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
+								break;
+							}
+						}
+					}.request();
 					
+					if (response == EResponse.SIGNIN_OK) {
+						
+						// TODO: Goto main window
+						System.out.println("Signed In: " + uid);
+					}
 				}
 			}
 		});
