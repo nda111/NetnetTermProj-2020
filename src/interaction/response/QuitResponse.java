@@ -16,7 +16,7 @@ public final class QuitResponse implements IResponse {
 
 		if (responser.getMeOrNull() != null) {
 			
-			Server.Responses.get(ERequest.SIGNOUT).response(new String[0], responser, reader, writer);
+			Server.Responses.get(ERequest.SIGNOUT).response(new String[0], responser, reader, null);
 		}
 		
 		writer.println(EResponse.QUIT_OK.getValue());

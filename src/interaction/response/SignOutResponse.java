@@ -31,8 +31,11 @@ public final class SignOutResponse implements IResponse{
 			responser.setMe(null);
 		}
 		
-		writer.println(response.getValue());
-		writer.flush();
+		if (writer != null) {
+			
+			writer.println(response.getValue());
+			writer.flush();
+		}
 		
 		return response;
 	}
