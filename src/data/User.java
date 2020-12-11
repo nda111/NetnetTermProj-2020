@@ -62,7 +62,7 @@ public final class User {
 	
 	public static boolean isUidAvailable(String uid) {
 		
-		return Server.Users.containsKey(uid);
+		return !Server.Users.containsKey(uid);
 	}
 	
 	private static String hashPassword(String password) {
