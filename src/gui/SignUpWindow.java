@@ -159,8 +159,7 @@ public final class SignUpWindow extends WindowBase {
 						return;
 					}
 
-					// TODO: Request sign up
-					// 1. Check uid validity
+					// Check uid validity
 					EResponse response = new RequestBase(ERequest.VALIDATE_UID, new String[] { uid }, reader, writer) {
 
 						@Override
@@ -185,7 +184,7 @@ public final class SignUpWindow extends WindowBase {
 						}
 					}.request();
 					
-					// 2. Request sign up
+					// Request sign up
 					if (response == EResponse.VALIDATE_UID_OK) {
 					
 						System.out.println("SIGNUP");
