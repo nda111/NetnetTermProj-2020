@@ -37,6 +37,7 @@ public final class AskUidResponse implements IResponse {
 			writer.println(response.getValue());
 			writer.println(user.uid);
 		}
+		writer.flush();
 		
 		return response;
 	}

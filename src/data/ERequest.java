@@ -3,12 +3,13 @@ package data;
 public enum ERequest {
 	
 	ECHO((byte)0), // 에코 요청
-	VALIDATE_UID((byte)1), // UID 중복 검사
-	SIGNUP((byte)2), // 회원가입 요청 
-	SIGNIN((byte)3), // 로그인 요청 
-	SIGNOUT((byte)4), // 로그아웃 요청
-	ASK_UID((byte)5), // 아이디 찾기 
-	ASK_FRIEND((byte)6); // 친구 목록 요청 
+	QUIT((byte)1), // 종료 선언  
+	VALIDATE_UID((byte)2), // UID 중복 검사
+	SIGNUP((byte)3), // 회원가입 요청 
+	SIGNIN((byte)4), // 로그인 요청 
+	SIGNOUT((byte)5), // 로그아웃 요청
+	ASK_UID((byte)6), // 아이디 찾기 
+	ASK_FRIEND((byte)7); // 친구 목록 요청 
 
 	// 파라미터로 들어온 값에 해당하는 ERequest 객체를 반환한다.
 	// 알 수 없는 요청이면 null을 반환한다.

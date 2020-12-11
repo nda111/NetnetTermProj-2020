@@ -27,6 +27,7 @@ public final class ValidateUidResponse implements IResponse {
 		}
 		
 		writer.println(response.getValue());
+		writer.flush();
 		
 		return response;
 	}

@@ -38,6 +38,7 @@ public final class SignInResponse implements IResponse{
 		}
 		
 		writer.println(response.getValue());
+		writer.flush();
 		
 		return response;
 	}

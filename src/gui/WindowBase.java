@@ -5,19 +5,43 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import data.ERequest;
+import data.EResponse;
+import interaction.RequestBase;
+
 public abstract class WindowBase extends JFrame {
 	
 	private WindowBase parent = null;
-	private Socket socket;
+	Socket socket;
+	Scanner reader;
+	PrintWriter writer;
 
 	public WindowBase(Socket socket) {
 		
 		this.socket = socket;
+		if (socket == null) {
+			
+			reader = null;
+			writer = null;
+		} else {
+			
+			try {
+				
+				reader = new Scanner(socket.getInputStream());
+				writer = new PrintWriter(socket.getOutputStream());
+			} catch (IOException e1) {
+				
+				e1.printStackTrace();
+			}
+		}
 		
 		this.addWindowListener(new WindowAdapter() {
 			
@@ -26,7 +50,14 @@ public abstract class WindowBase extends JFrame {
 
 				if (isRoot()) {
 					
-					System.exit(0);
+					EResponse response = new RequestBase(ERequest.QUIT, new String[0], reader, writer) {
+
+						@Override
+						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+							
+							System.exit(0);
+						}
+					}.request();
 				} else {
 
 					backToParent();
@@ -61,6 +92,8 @@ public abstract class WindowBase extends JFrame {
 	public void switchWindow(WindowBase win, boolean newRoot) {
 		
 		win.socket = this.socket;
+		win.reader = this.reader;
+		win.writer = this.writer;
 		
 		matchCenter(win);
 

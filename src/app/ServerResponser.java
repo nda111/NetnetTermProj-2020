@@ -39,61 +39,56 @@ public class ServerResponser extends Thread {
 	@Override
 	public void start() {
 		
-		while (true) {
-			
-			if (!reader.hasNext()) {
-				
-				try {
-					
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-
-					e.printStackTrace();
-				}
-				
-				continue;
-			}
-			
-			final StringBuilder logBuilder = new StringBuilder("RESP, ");
-			logBuilder.append(client.getRemoteSocketAddress().toString());
-			logBuilder.append(", [");
+		EResponse response = null;
+		while (response != EResponse.QUIT_OK) {
 			
 			final ERequest request = ERequest.valueOf(reader.nextByte()); // Recognize request
 			final int paramCount = reader.nextInt(); // Get the number of parameters
-			
-			logBuilder.append(request.toString());
-			logBuilder.append(", ");
 			
 			// Receive parameters in string form
 			final String[] params = new String[paramCount];
 			for (int i = 0; i < paramCount; i++) {
 				
-				params[i] = reader.nextLine();
-				
-				logBuilder.append(params[i]);
-				logBuilder.append(", ");
+				params[i] = reader.nextLine().trim();
 			}
-			logBuilder.delete(logBuilder.length() - 3, logBuilder.length() - 1);
-			logBuilder.append("], ");
 			
-			if (me != null && me.certificateByAddress(this.getClientAddress())) {
+			if (me == null || me.certificateByAddress(this.getClientAddress())) {
 
 				// Act appropriate response
 				final IResponse responser = Server.Responses.get(request);
-				final EResponse response = responser.response(params, this, reader, writer);
+				response = responser.response(params, this, reader, writer);
+				
+				final StringBuilder logBuilder = new StringBuilder("RESP, ");
+				logBuilder.append(client.getRemoteSocketAddress().toString());
+				logBuilder.append(", [");
+	
+				logBuilder.append(request.toString());
+				logBuilder.append(", ");
+				
+				logBuilder.append(String.join(", ", params));
+				logBuilder.append("], ");
 				
 				logBuilder.append(response.toString());
 				if (response.getRequest() != request) {
 					
 					logBuilder.append(": RR-mismatch");
 				}
-				
 				System.out.println(logBuilder.toString());
 			} else {
 				
 				Server.Responses.get(ERequest.ECHO).response(params, this, reader, writer);
 				System.out.println("RESP, ECHO_OK");
 			}
+		}
+		
+		try {
+			
+			reader.close();
+			writer.close();
+			client.close();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
 		}
 	}
 	

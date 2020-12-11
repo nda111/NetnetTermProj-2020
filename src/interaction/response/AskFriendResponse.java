@@ -29,11 +29,13 @@ public class AskFriendResponse implements IResponse {
 					writer.println(friend.toJson().toJSONString().replace('\n', ' ')); 
 				}
 			}
+			writer.flush();
 			
 			return EResponse.ASK_FRIEND_OK;
 		} else {
 			
 			writer.println(EResponse.ASK_FRIEND_NO.getValue());
+			writer.flush();
 			
 			return EResponse.ASK_FRIEND_NO;
 		}

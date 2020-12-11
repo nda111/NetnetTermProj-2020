@@ -26,6 +26,7 @@ public final class SignUpResponse implements IResponse {
 			
 			User user = new User(uid, email, password, name, birth);
 			Server.Users.put(uid, user);
+			user.tryWriteFile();
 			
 			response = EResponse.SIGNUP_OK;
 		} else { 
@@ -35,6 +36,7 @@ public final class SignUpResponse implements IResponse {
 		}
 		
 		writer.println(response.getValue());
+		writer.flush();
 		
 		return response;
 	}

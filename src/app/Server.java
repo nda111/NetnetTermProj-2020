@@ -12,6 +12,7 @@ import interaction.IResponse;
 import interaction.response.AskFriendResponse;
 import interaction.response.AskUidResponse;
 import interaction.response.EchoResponse;
+import interaction.response.QuitResponse;
 import interaction.response.SignInResponse;
 import interaction.response.SignOutResponse;
 import interaction.response.SignUpResponse;
@@ -61,6 +62,9 @@ public class Server {
 		
 		// Simple Echo request
 		Responses.put(ERequest.ECHO, new EchoResponse());
+		
+		// Quit request
+		Responses.put(ERequest.QUIT, new QuitResponse());
 		
 		// ValidateUid, SignUp, SignIn, SignOut
 		Responses.put(ERequest.VALIDATE_UID, new ValidateUidResponse());

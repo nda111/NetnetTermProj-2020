@@ -4,6 +4,8 @@ public enum EResponse {
 
 	ECHO_OK(ERequest.ECHO, (byte)0), // 에코 응답
 	
+	QUIT_OK(ERequest.QUIT, (byte)0), // 종료 수락 
+	
 	VALIDATE_UID_OK(ERequest.VALIDATE_UID, (byte)0), // UID 사용 가능 
 	VALIDATE_UID_NO(ERequest.VALIDATE_UID, (byte)1), // UID 사용 불가능
 	
