@@ -3,15 +3,24 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import app.Client;
+import data.ERequest;
+import data.EResponse;
 import data.User;
+import interaction.RequestBase;
 
 public final class MainWindow extends WindowBase {
 	
@@ -94,6 +103,93 @@ public final class MainWindow extends WindowBase {
 	@Override
 	public void setGuiEvents() {
 
+		addFriendButton.addActionListener(new ActionListener() {
+			
+			private User friend = null;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+			
+				final String friendUid = friendTextField.getText().trim();
+				
+				new RequestBase(ERequest.ADD_FRIEND, new String[] { friendUid }) {
+
+					@Override
+					protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+						
+						switch (response) {
+						
+						case ADD_FRIEND_OK:
+							reader.nextLine();
+							friend = User.parseJsonOrNull(reader.nextLine());
+							
+							Client.Friends.put(friend.uid, friend);
+							updateFriendList();
+							
+							friendTextField.setText("");
+							break;
+							
+						case ADD_FRIEND_ERR_YOU:
+							JOptionPane.showMessageDialog(null, "It's you idiot.");
+							friendTextField.selectAll();
+							friendTextField.grabFocus();
+							break;
+							
+						case ADD_FRIEND_ERR_UID:
+							JOptionPane.showMessageDialog(null, "There's no such user: " + friendUid + ".");
+							friendTextField.selectAll();
+							friendTextField.grabFocus();
+							break;
+							
+						case ADD_FRIEND_ERR_ALREADY:
+							JOptionPane.showMessageDialog(null, "You're already a friend of " + friendUid + ".");
+							friendTextField.selectAll();
+							friendTextField.grabFocus();
+							break;
+							
+						case ADD_FRIEND_ERR:
+						default:
+							JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
+							break;
+						}
+					}
+				}.request();
+			}
+		});
+	}
+
+	@Override
+	public void handleAnnouncement(EResponse response, String[] params) {
+		
+		String fUid;
+		
+		switch (response) {
+		
+		case ANNOUNCE_ADD_FRIEND:
+			User user = User.parseJsonOrNull(params[0]);
+			Client.Friends.put(user.uid, user);
+			updateFriendList();
+			break;
+			
+		case ANNOUNCE_FRIEND_IN:
+			fUid = params[0];
+			Client.FriendsIn.add(fUid);
+			updateFriendList();
+			break;
+			
+		case ANNOUNCE_FRIEND_OUT:
+			fUid = params[0];
+			Client.FriendsIn.remove(fUid);
+			updateFriendList();
+			break;
+			
+		default:
+			break;
+		}
+	}
+	
+	private void updateFriendList() {
+		
 		
 	}
 }

@@ -2,6 +2,10 @@ package data;
 
 public enum EResponse {
 
+	ANNOUNCE_ADD_FRIEND(ERequest.ANNOUNCE, (byte)0), // 친구 추가 
+	ANNOUNCE_FRIEND_IN(ERequest.ANNOUNCE, (byte)1), // 친구 접속 
+	ANNOUNCE_FRIEND_OUT(ERequest.ANNOUNCE, (byte)2), // 친구 연결 해제 
+
 	ECHO_OK(ERequest.ECHO, (byte)0), // 에코 응답
 	
 	QUIT_OK(ERequest.QUIT, (byte)0), // 종료 수락 
@@ -25,7 +29,13 @@ public enum EResponse {
 	ASK_UID_NO(ERequest.ASK_UID, (byte)1),	// 없음 
 	
 	ASK_FRIEND_OK(ERequest.ASK_FRIEND, (byte)0),	// ㅇㅋ 
-	ASK_FRIEND_NO(ERequest.ASK_FRIEND, (byte)1);	// ㄴㄴ 
+	ASK_FRIEND_NO(ERequest.ASK_FRIEND, (byte)1),	// ㄴㄴ 
+	
+	ADD_FRIEND_OK(ERequest.ADD_FRIEND, (byte)0),			// 성공 
+	ADD_FRIEND_ERR_UID(ERequest.ADD_FRIEND, (byte)1),		// 그런 애 없음 
+	ADD_FRIEND_ERR_ALREADY(ERequest.ADD_FRIEND, (byte)2),	// 이미 추가함 
+	ADD_FRIEND_ERR_YOU(ERequest.ADD_FRIEND, (byte)3),		// 본인 친구 추가 
+	ADD_FRIEND_ERR(ERequest.ADD_FRIEND, (byte)4);			// 에러 
 
 	// 파라미터로 들어온 값에 해당하는 ERequest 객체를 반환한다.
 	// 알 수 없는 요청이면 null을 반환한다.
