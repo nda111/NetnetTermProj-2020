@@ -14,7 +14,7 @@ import data.User;
 import interaction.IResponse;
 
 
-public class ServerResponser extends Thread {
+public class ServerResponser implements Runnable {
 	
 	private Socket client = null;
 	private Scanner reader = null;
@@ -37,7 +37,7 @@ public class ServerResponser extends Thread {
 	}
 	
 	@Override
-	public void start() {
+	public void run() {
 		
 		EResponse response = null;
 		while (response != EResponse.QUIT_OK) {
@@ -52,7 +52,10 @@ public class ServerResponser extends Thread {
 				params[i] = reader.nextLine().trim();
 			}
 			
-			if (me == null || me.certificateByAddress(this.getClientAddress())) {
+			if (request == ERequest.ANNOUNCE) {
+				
+				System.out.println("ANNOUNCE, " + client.getRemoteSocketAddress().toString());
+			} else if (me == null || me.certificateByAddress(this.getClientAddress())) {
 
 				// Act appropriate response
 				final IResponse responser = Server.Responses.get(request);

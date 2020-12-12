@@ -13,11 +13,16 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import app.Client;
 import data.ERequest;
 import data.EResponse;
+import data.User;
 import interaction.RequestBase;
 
 public abstract class WindowBase extends JFrame {
+
+	private static RequestBase announceListener = null;
+	public static WindowBase CurrentWindow = null;
 	
 	private WindowBase parent = null;
 	Socket socket;
@@ -50,7 +55,7 @@ public abstract class WindowBase extends JFrame {
 
 				if (isRoot()) {
 					
-					EResponse response = new RequestBase(ERequest.QUIT, new String[0], reader, writer) {
+					new RequestBase(ERequest.QUIT, new String[0]) {
 
 						@Override
 						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
@@ -68,6 +73,35 @@ public abstract class WindowBase extends JFrame {
 		configureWindow();
 		initializeGuiComponents((JPanel)this.getContentPane());
 		setGuiEvents();
+		
+		if (announceListener == null) {
+		
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+
+					announceListener = new RequestBase(ERequest.ANNOUNCE, new String[0]) {
+
+						@Override
+						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+							
+							int numParams = reader.nextInt();
+							String[] params = new String[numParams];
+							for (int i = 0; i < numParams; i++) {
+								
+								params[i] = reader.nextLine();
+							}
+			
+							CurrentWindow.handleAnnouncement(response, params);
+							
+							this.request();
+						}
+					};
+					announceListener.request();
+				}
+			}).start();
+		}
 	}
 	
 	public WindowBase() {
@@ -108,6 +142,8 @@ public abstract class WindowBase extends JFrame {
 			
 			win.parent = this;
 		}
+		
+		CurrentWindow = win;
 	}
 	
 	public void backToParent() {
@@ -120,6 +156,10 @@ public abstract class WindowBase extends JFrame {
 			setVisible(false);
 			
 			dispose();
+			
+			CurrentWindow = parent;
+			
+			parent.onBackFromChild();
 		}
 	}
 	
@@ -131,6 +171,52 @@ public abstract class WindowBase extends JFrame {
 			
 			parent.dispose();
 		}
+	}
+	
+	@Override
+	public void setVisible(boolean b) {
+		
+		super.setVisible(b);
+		
+		if (b) {
+			
+			CurrentWindow = this;
+		}
+	}
+	
+	public void handleAnnouncement(EResponse response, String[] params) {
+		
+		String fUid;
+		long signOutTime;
+		
+		switch (response) {
+		
+		case ANNOUNCE_ADD_FRIEND:
+			User user = User.parseJsonOrNull(params[0]);
+			Client.Friends.put(user.uid, user);
+			break;
+			
+		case ANNOUNCE_FRIEND_IN:
+			fUid = params[0];
+			Client.FriendsIn.add(fUid);
+			break;
+			
+		case ANNOUNCE_FRIEND_OUT:
+			fUid = params[0];
+			signOutTime = Long.parseLong(params[1]);
+			
+			Client.Friends.get(fUid).signOutTime = signOutTime;
+			Client.FriendsIn.remove(fUid);
+			break;
+			
+		default:
+			break;
+		}
+	}
+	
+	public void onBackFromChild() {
+	
+		// Empty
 	}
 	
 	public abstract void configureWindow();

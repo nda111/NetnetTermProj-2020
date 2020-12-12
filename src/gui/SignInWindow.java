@@ -100,7 +100,7 @@ public final class SignInWindow extends WindowBase {
 					pwTextField.grabFocus();
 				} else {
 
-					EResponse response = new RequestBase(ERequest.SIGNIN, new String[] { uid, pw }, reader, writer) {
+					new RequestBase(ERequest.SIGNIN, new String[] { uid, pw }) {
 
 						@Override
 						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
@@ -108,7 +108,10 @@ public final class SignInWindow extends WindowBase {
 							switch (response) {
 							
 							case SIGNIN_OK:
-								// Empty
+								System.out.println("Signed In: " + uid);
+								
+								MainWindow mainWindow = new MainWindow();
+								switchWindow(mainWindow, true);
 								break;
 								
 							case SIGNIN_ERR_NO_UID:
@@ -134,16 +137,14 @@ public final class SignInWindow extends WindowBase {
 							}
 						}
 					}.request();
-					
-					if (response == EResponse.SIGNIN_OK) {
-						
-						System.out.println("Signed In: " + uid);
-						
-						MainWindow mainWindow = new MainWindow();
-						switchWindow(mainWindow, true);
-					}
 				}
 			}
 		});
+	}
+
+	@Override
+	public void handleAnnouncement(EResponse response, String[] params) {
+		
+		// Empty
 	}
 }

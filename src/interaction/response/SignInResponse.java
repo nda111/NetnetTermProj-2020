@@ -35,6 +35,24 @@ public final class SignInResponse implements IResponse{
 			
 			user.signInBy(responser.getClientAddress());
 			responser.setMe(user);
+			
+			Server.Announcers.put(uid, writer);
+			
+			for (String fUid : user.friends) {
+				
+				PrintWriter fWriter = Server.Announcers.getOrDefault(fUid, null);
+				if (fWriter != null) {
+					
+					fWriter.print(EResponse.ANNOUNCE_FRIEND_IN.getValue());
+					fWriter.print(' ');
+					
+					fWriter.print(1);
+					fWriter.print(' ');
+					
+					fWriter.println(uid);
+					fWriter.flush();
+				}
+			}
 		}
 		
 		writer.println(response.getValue());

@@ -3,11 +3,19 @@ package app;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 
+import data.User;
 import gui.SignInWindow;
+import interaction.RequestBase;
 
 public class Client {
+	
+	public static final HashMap<String, User> Friends = new HashMap<>();
+	
+	public static final HashSet<String> FriendsIn = new HashSet<>();
 	
 	public static void main(String[] args) {
 		
@@ -28,6 +36,7 @@ public class Client {
 			scanner.close();
 			
 			socket = new Socket(host, port);
+			RequestBase.tryInitSocket(socket);
 		} catch (IOException e) {
 
 			e.printStackTrace();

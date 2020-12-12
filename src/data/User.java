@@ -34,14 +34,22 @@ public final class User {
 			long birth = (long) json.get("birth");
 			String personalMessage = (String) json.get("personalMessage");
 			long signOutTime = (long) json.get("signOutTime");
-			
+
+			HashSet<String> friends;
 			JSONArray friendArray = (JSONArray)json.get("friends");
-			HashSet<String> friends = new HashSet<>();
-			ListIterator iterator = friendArray.listIterator();
-			while (iterator.hasNext()) {
+			if (friendArray == null) {
 				
-				String friend = (String)iterator.next();
-				friends.add(friend);
+				friends = null;
+			} else {
+				
+				friends = new HashSet<>();
+				
+				ListIterator iterator = friendArray.listIterator();
+				while (iterator.hasNext()) {
+					
+					String friend = (String)iterator.next();
+					friends.add(friend);
+				}
 			}
 			
 			User user = new User(uid, email, password, name, birth, personalMessage, friends);
@@ -175,30 +183,40 @@ public final class User {
 	
 	public boolean tryWriteFile() {
 		
+		File dir = new File(User.UsersPath);
+		if (!dir.exists()) {
+			
+			dir.mkdir();
+		}
+		
 		String path = buildFilePath(uid);
 		File file = new File(path);
-		
-		if (file.exists()) {
-			
-			return false;
-		} else {
-			
+		if (!file.exists()) {
+
 			try {
 				
 				file.createNewFile();
-				PrintWriter writer = new PrintWriter(path);
-				
-				JSONObject json = toJson();
-				json.writeJSONString(writer);
-				
-				writer.close();
-				
-				return true;
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 				return false;
 			}
+		} 
+
+		try {
+			
+			PrintWriter writer = new PrintWriter(path);
+			
+			JSONObject json = toJson();
+			json.writeJSONString(writer);
+			
+			writer.close();
+			
+			return true;
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			return false;
 		}
 	}
 }
