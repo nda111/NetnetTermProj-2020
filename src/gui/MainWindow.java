@@ -98,6 +98,11 @@ public final class MainWindow extends WindowBase {
 		
 		root.add(topContainer, BorderLayout.NORTH);
 		root.add(centerContainer, BorderLayout.CENTER);
+		
+		//
+		// Set values
+		//
+		updateFriendList();
 	}
 
 	@Override
@@ -161,25 +166,13 @@ public final class MainWindow extends WindowBase {
 	@Override
 	public void handleAnnouncement(EResponse response, String[] params) {
 		
-		String fUid;
+		super.handleAnnouncement(response, params);
 		
 		switch (response) {
 		
 		case ANNOUNCE_ADD_FRIEND:
-			User user = User.parseJsonOrNull(params[0]);
-			Client.Friends.put(user.uid, user);
-			updateFriendList();
-			break;
-			
 		case ANNOUNCE_FRIEND_IN:
-			fUid = params[0];
-			Client.FriendsIn.add(fUid);
-			updateFriendList();
-			break;
-			
 		case ANNOUNCE_FRIEND_OUT:
-			fUid = params[0];
-			Client.FriendsIn.remove(fUid);
 			updateFriendList();
 			break;
 			
@@ -188,8 +181,14 @@ public final class MainWindow extends WindowBase {
 		}
 	}
 	
+	@Override
+	public void onBackFromChild() {
+
+		updateFriendList();
+	}
+	
 	private void updateFriendList() {
 		
-		
+		// TODO: 
 	}
 }
