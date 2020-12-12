@@ -7,13 +7,18 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import data.ERequest;
+import data.Room;
 import data.User;
 import interaction.IResponse;
+import interaction.response.AckChatResponse;
 import interaction.response.AddFriendResponse;
+import interaction.response.AskChatResponse;
 import interaction.response.AskFriendResponse;
 import interaction.response.AskUidResponse;
+import interaction.response.ByeChatResponse;
 import interaction.response.EchoResponse;
 import interaction.response.QuitResponse;
+import interaction.response.SayChatResponse;
 import interaction.response.SignInResponse;
 import interaction.response.SignOutResponse;
 import interaction.response.SignUpResponse;
@@ -27,6 +32,9 @@ public class Server {
 	public static final HashMap<String, User> Users = new HashMap<>(); // 사용자 리스트
 	
 	public static final HashMap<String, PrintWriter> Announcers = new HashMap<>(); // 출력스트림 
+	
+	public static final HashMap<String, String> PendingChats = new HashMap<>();	// 수락/거절 대기 중인 채팅방의 요청자-수신자 쌍 
+	public static final HashMap<Integer, Room> ChatRooms = new HashMap<>(); // 대화 중인 채팅방 
 	
 	public static ServerSocket server = null;
 	
@@ -80,6 +88,12 @@ public class Server {
 		
 		// Friend
 		Responses.put(ERequest.ADD_FRIEND, new AddFriendResponse());
+		
+		// Chat
+		Responses.put(ERequest.ASK_CHAT, new AskChatResponse());
+		Responses.put(ERequest.ACK_CHAT, new AckChatResponse());
+		Responses.put(ERequest.SAY_CHAT, new SayChatResponse());
+		Responses.put(ERequest.END_CHAT, new ByeChatResponse());
 	}
 	
 	// Load all user info from files before the server starts.
