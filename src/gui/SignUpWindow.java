@@ -158,9 +158,11 @@ public final class SignUpWindow extends WindowBase {
 						
 						return;
 					}
+					
+					final long birth_ = birth;
 
 					// Check uid validity
-					EResponse response = new RequestBase(ERequest.VALIDATE_UID, new String[] { uid }, reader, writer) {
+					new RequestBase(ERequest.VALIDATE_UID, new String[] { uid }) {
 
 						@Override
 						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
@@ -168,7 +170,27 @@ public final class SignUpWindow extends WindowBase {
 							switch (response) {
 							
 							case VALIDATE_UID_OK:
-								// Normal
+								// Request sign up
+								System.out.println("SIGNUP");
+								new RequestBase(ERequest.SIGNUP, new String[] { uid, email, pw, name, Long.toString(birth_) }) {
+			
+									@Override
+									protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+										
+										switch (response) {
+										
+										case SIGNUP_OK:
+											JOptionPane.showMessageDialog(null, "Welcome!!");
+											backToParent();
+											break;
+											
+										case SIGNUP_ERR:
+										default:
+											JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
+											break;
+										}
+									}
+								}.request();
 								break;
 								
 							case VALIDATE_UID_NO:
@@ -183,33 +205,14 @@ public final class SignUpWindow extends WindowBase {
 							}
 						}
 					}.request();
-					
-					// Request sign up
-					if (response == EResponse.VALIDATE_UID_OK) {
-					
-						System.out.println("SIGNUP");
-						response = new RequestBase(ERequest.SIGNUP, new String[] { uid, email, pw, name, Long.toString(birth) }, reader, writer) {
-	
-							@Override
-							protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
-								
-								switch (response) {
-								
-								case SIGNUP_OK:
-									JOptionPane.showMessageDialog(null, "Welcome!!");
-									backToParent();
-									break;
-									
-								case SIGNUP_ERR:
-								default:
-									JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
-									break;
-								}
-							}
-						}.request();
-					}
 				}
 			}
 		});
+	}
+
+	@Override
+	public void handleAnnouncement(EResponse response, String[] params) {
+		
+		// Empty
 	}
 }

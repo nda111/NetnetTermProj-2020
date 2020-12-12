@@ -9,6 +9,7 @@ import java.util.Scanner;
 import data.ERequest;
 import data.User;
 import interaction.IResponse;
+import interaction.response.AddFriendResponse;
 import interaction.response.AskFriendResponse;
 import interaction.response.AskUidResponse;
 import interaction.response.EchoResponse;
@@ -24,6 +25,8 @@ public class Server {
 	public static final HashMap<ERequest, IResponse> Responses = new HashMap<>(); // 응답 리스
 	
 	public static final HashMap<String, User> Users = new HashMap<>(); // 사용자 리스트
+	
+	public static final HashMap<String, PrintWriter> Announcers = new HashMap<>(); // 출력스트림 
 	
 	public static ServerSocket server = null;
 	
@@ -50,7 +53,8 @@ public class Server {
 				Socket client = server.accept();
 				
 				ServerResponser handler = new ServerResponser(client); // 스레드 생성
-				handler.start(); // 스레드 시작
+				Thread thread = new Thread(handler);
+				thread.start(); // 스레드 시작
 			} // while
 		} catch (IOException e) {
 
@@ -73,6 +77,9 @@ public class Server {
 		Responses.put(ERequest.SIGNOUT, new SignOutResponse());
 		Responses.put(ERequest.ASK_UID, new AskUidResponse());
 		Responses.put(ERequest.ASK_FRIEND, new AskFriendResponse());
+		
+		// Friend
+		Responses.put(ERequest.ADD_FRIEND, new AddFriendResponse());
 	}
 	
 	// Load all user info from files before the server starts.
