@@ -176,6 +176,40 @@ public final class MainWindow extends WindowBase {
 			updateFriendList();
 			break;
 			
+		case ANNOUNCE_ASK_CHAT:
+			final String fUid = params[0];
+			final String fName = params[1];
+			final Boolean bAccept = JOptionPane.showConfirmDialog(this, 
+					fName + " want's to talk to you.\nWill you accept?", "Chat", 
+					JOptionPane.YES_NO_OPTION) == 0;
+
+			new RequestBase(ERequest.ACK_CHAT, new String[] { fUid, bAccept.toString() }) {
+
+				@Override
+				protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+
+					switch (response) {
+					
+					case ACK_CHAT_OK:
+						if (bAccept) {
+							
+							ChatWindow chatWin = new ChatWindow(fUid, reader.nextInt());
+							switchWindow(chatWin, false);
+						}
+						break;
+						
+					case ACK_CHAT_LATE:
+						JOptionPane.showMessageDialog(null, "The opponent has left.");
+						break;
+						
+					default:
+						JOptionPane.showMessageDialog(null, "Unknown Error");
+						break;
+					}
+				}
+			}.request();
+			break;
+			
 		default:
 			break;
 		}
@@ -187,8 +221,20 @@ public final class MainWindow extends WindowBase {
 		updateFriendList();
 	}
 	
+	private void askChat(String fUid) {
+		
+		if (Client.FriendsIn.contains(fUid)) {
+			
+			ChatWindow chatWin = new ChatWindow(fUid);
+			switchWindow(chatWin, false);
+		} else {
+
+			JOptionPane.showMessageDialog(null, "The opponent is offline.");
+		}
+	}
+	
 	private void updateFriendList() {
 		
-		// TODO: 
+		
 	}
 }
