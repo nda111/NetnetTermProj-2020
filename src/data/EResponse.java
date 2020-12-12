@@ -3,8 +3,13 @@ package data;
 public enum EResponse {
 
 	ANNOUNCE_ADD_FRIEND(ERequest.ANNOUNCE, (byte)0), // 친구 추가 
-	ANNOUNCE_FRIEND_IN(ERequest.ANNOUNCE, (byte)1), // 친구 접속 
+	ANNOUNCE_FRIEND_IN(ERequest.ANNOUNCE, (byte)1),  // 친구 접속 
 	ANNOUNCE_FRIEND_OUT(ERequest.ANNOUNCE, (byte)2), // 친구 연결 해제 
+	
+	ANNOUNCE_ASK_CHAT(ERequest.ANNOUNCE, (byte)3), // 대화 신청 전달 
+	ANNOUNCE_ACK_CHAT(ERequest.ANNOUNCE, (byte)4), // 대화 신청 결과 전달 
+	ANNOUNCE_SAY_CHAT(ERequest.ANNOUNCE, (byte)5), // 대화 내용 전달 
+	ANNOUNCE_END_CHAT(ERequest.ANNOUNCE, (byte)6), // 대화 종료 전달 
 
 	ECHO_OK(ERequest.ECHO, (byte)0), // 에코 응답
 	
@@ -35,7 +40,21 @@ public enum EResponse {
 	ADD_FRIEND_ERR_UID(ERequest.ADD_FRIEND, (byte)1),		// 그런 애 없음 
 	ADD_FRIEND_ERR_ALREADY(ERequest.ADD_FRIEND, (byte)2),	// 이미 추가함 
 	ADD_FRIEND_ERR_YOU(ERequest.ADD_FRIEND, (byte)3),		// 본인 친구 추가 
-	ADD_FRIEND_ERR(ERequest.ADD_FRIEND, (byte)4);			// 에러 
+	ADD_FRIEND_ERR(ERequest.ADD_FRIEND, (byte)4),			// 에러 
+
+	ASK_CHAT_OK(ERequest.ASK_CHAT, (byte)0), 		// ㅇㅋ 물어볼게 
+	ASK_CHAT_OFFLINE(ERequest.ASK_CHAT, (byte)1), 	// 걔 오프라인이라 안 됨 
+	ASK_CHAT_ERR(ERequest.ASK_CHAT, (byte)2), 		// 에러 났으니까 다시 해봐 
+
+	ACK_CHAT_OK(ERequest.ASK_CHAT, (byte)0),		// ㅇㅋ 전달할게 
+	ACK_CHAT_LATE(ERequest.ASK_CHAT, (byte)1),		// 늦었어 
+	
+	SAY_CHAT_OK(ERequest.SAY_CHAT, (byte)0),		// 말하기 ㅇㅋ 
+	SAY_CHAT_NO_ROOM(ERequest.SAY_CHAT, (byte)1), 	// 방 없어짐 
+	SAY_CHAT_ERR(ERequest.SAY_CHAT, (byte)2),		// 에러 
+
+	END_CHAT_OK(ERequest.END_CHAT, (byte)0),	// ㅇㅋ 
+	END_CHAT_ERR(ERequest.END_CHAT, (byte)1);	// 에러 
 
 	// 파라미터로 들어온 값에 해당하는 ERequest 객체를 반환한다.
 	// 알 수 없는 요청이면 null을 반환한다.
