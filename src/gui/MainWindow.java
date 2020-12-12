@@ -45,10 +45,11 @@ public final class MainWindow extends WindowBase {
 		 * 
 		 * 	1. Create WhoAmIRequest-Response
 		 * 	2. Ask who am I, put the info on the meLabel
-		 * 	3. Ask my friend list using Ask FriendResponse (reference FriendResponse.java)
+		 * 	3. Ask my friend list using AskFriendResponse (reference AskFriendResponse.java)
 		 * 	4. Add some event listeners to the onlineList so that you can double-click to request chat
 		 * 	5. A confirm dialog must be popped up when you double-click your online friend to request chat
-		 * 	6. Create a pull request
+		 *  6. Fill updateFriendList() method up.
+		 * 	7. Create a pull request
 		 * 
 		 ********************************************************************
 		 * 	Make sure you write a proper commit message for every commits.	*
