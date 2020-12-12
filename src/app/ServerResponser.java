@@ -54,7 +54,7 @@ public class ServerResponser implements Runnable {
 			
 			if (request == ERequest.ANNOUNCE) {
 				
-				System.out.println("ANNOUNCE");
+				System.out.println("ANNOUNCE, " + client.getRemoteSocketAddress().toString());
 			} else if (me == null || me.certificateByAddress(this.getClientAddress())) {
 
 				// Act appropriate response
