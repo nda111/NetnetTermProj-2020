@@ -17,6 +17,8 @@ public class Client {
 	
 	public static final HashSet<String> FriendsIn = new HashSet<>();
 	
+	public static final User Me = null;
+	
 	public static void main(String[] args) {
 		
 		// For MacOS
