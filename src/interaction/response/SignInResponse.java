@@ -43,7 +43,7 @@ public final class SignInResponse implements IResponse{
 				PrintWriter fWriter = Server.Announcers.getOrDefault(fUid, null);
 				if (fWriter != null) {
 					
-					fWriter.print(EResponse.ANNOUNCE_FRIEND_IN);
+					fWriter.print(EResponse.ANNOUNCE_FRIEND_IN.getValue());
 					fWriter.print(' ');
 					
 					fWriter.print(1);

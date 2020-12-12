@@ -38,13 +38,14 @@ public final class SignOutResponse implements IResponse{
 				PrintWriter fWriter = Server.Announcers.getOrDefault(fUid, null);
 				if (fWriter != null) {
 					
-					fWriter.print(EResponse.ANNOUNCE_FRIEND_OUT);
+					fWriter.print(EResponse.ANNOUNCE_FRIEND_OUT.getValue());
 					fWriter.print(' ');
 					
-					fWriter.print(1);
+					fWriter.print(2);
 					fWriter.print(' ');
 					
 					fWriter.println(me.uid);
+					fWriter.println(me.signOutTime);
 					fWriter.flush();
 				}
 			}
