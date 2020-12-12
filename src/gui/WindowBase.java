@@ -13,8 +13,10 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import app.Client;
 import data.ERequest;
 import data.EResponse;
+import data.User;
 import interaction.RequestBase;
 
 public abstract class WindowBase extends JFrame {
@@ -156,6 +158,8 @@ public abstract class WindowBase extends JFrame {
 			dispose();
 			
 			CurrentWindow = parent;
+			
+			parent.onBackFromChild();
 		}
 	}
 	
@@ -180,11 +184,44 @@ public abstract class WindowBase extends JFrame {
 		}
 	}
 	
+	public void handleAnnouncement(EResponse response, String[] params) {
+		
+		String fUid;
+		long signOutTime;
+		
+		switch (response) {
+		
+		case ANNOUNCE_ADD_FRIEND:
+			User user = User.parseJsonOrNull(params[0]);
+			Client.Friends.put(user.uid, user);
+			break;
+			
+		case ANNOUNCE_FRIEND_IN:
+			fUid = params[0];
+			Client.FriendsIn.add(fUid);
+			break;
+			
+		case ANNOUNCE_FRIEND_OUT:
+			fUid = params[0];
+			signOutTime = Long.parseLong(params[1]);
+			
+			Client.Friends.get(fUid).signOutTime = signOutTime;
+			Client.FriendsIn.remove(fUid);
+			break;
+			
+		default:
+			break;
+		}
+	}
+	
+	public void onBackFromChild() {
+	
+		// Empty
+	}
+	
 	public abstract void configureWindow();
 	
 	public abstract void initializeGuiComponents(JPanel root);
 	
 	public abstract void setGuiEvents();
-	
-	public abstract void handleAnnouncement(EResponse response, String[] params);
 }
