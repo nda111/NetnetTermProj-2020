@@ -148,7 +148,7 @@ public class Weather {
 				}
 
 				StringBuilder resultBuilder = new StringBuilder("성남시 중원구 복정동 기준");
-				resultBuilder.append("오늘의 날짜는 " + baseDates+" ,\n");
+				resultBuilder.append("오늘의 날짜는 " + baseDates+",\n");
 				resultBuilder.append("측정 기준 시간은 " + baseTimes+"시 이며\n");
 				resultBuilder.append("현재 하늘 상태는 "+ skyState +" 입니다.");
 
