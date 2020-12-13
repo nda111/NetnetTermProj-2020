@@ -7,8 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,9 +22,8 @@ public class Weather {
 	private String nx = "62";// 위도
 	private String ny = "124";// 경도 (위도 경도는 참고로 중원구 복정동 기준)
 	private String dataType = "JSON"; // 데이터 타입
-	private String baseTime = null;
 	private String baseDate = null;
-	private String revisedTime = null;
+	private String baseTime = null;
 
 	public Weather(int nx, int ny, String dataType, long timeInMillis) {
 
@@ -32,24 +31,16 @@ public class Weather {
 		this.ny = Integer.toString(ny);
 		this.dataType = dataType;
 
-		baseDate = new SimpleDateFormat("yyyyMMdd").format(timeInMillis); // 조회하고싶은 날짜(서버날짜로 받아오기)
-		baseTime = new SimpleDateFormat("HHmm").format(timeInMillis);// 조회하고싶은 날짜(서버시간으로 받아오기)
-		int baseTimeNum = Integer.parseInt(baseTime) / 100;// 받아온시간 (시,분 )-> 시 로만 나타내기
-
-		LocalDate now = LocalDate.now();
-		if ((baseTimeNum == 0) || (baseTimeNum == 1)) {
-
-			LocalDate oneDayAgo = now.minusDays(1);
-			SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd");
-			baseDate = date.format(oneDayAgo);
-		}
-
-		int revisedTimeNum = ((baseTimeNum + 1) / 3 * 3 - 1) % 24;
-		this.revisedTime = Integer.toString(revisedTimeNum) + "00";
-		if (this.revisedTime.length() == 3) {
-
-			this.revisedTime = '0' + this.revisedTime;
-		}
+        LocalDateTime now = LocalDateTime.now();
+        int hour = ((now.getHour() + 1) / 3 * 3 - 1) % 24;
+        if (now.getHour() < 2) {
+        	
+        	now = now.minusDays(1);
+        	hour = 23;
+        }
+        
+        baseDate = String.format("%d%02d%02d", now.getYear(), now.getMonthValue(), now.getDayOfMonth());
+        baseTime = String.format("%02d00", hour);
 	}
 
 	public JSONArray getData(int page, int rows) {
@@ -62,7 +53,7 @@ public class Weather {
 			urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(rows), "UTF-8")); /* 한 페이지 결과 수 */
 			urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8")); /* 요청자료형식 */
 			urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /* 15년 12월 1일발표 */
-			urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode(revisedTime, "UTF-8")); /* 05시 발표 */
+			urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode(baseTime, "UTF-8")); /* 05시 발표 */
 			urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(nx, "UTF-8")); /* 예보지점 X 좌표값 */
 			urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(ny, "UTF-8")); /* 예보지점의 Y 좌표값 */
 		} catch (UnsupportedEncodingException e) {
@@ -126,14 +117,43 @@ public class Weather {
 	}
 	
 	public String getDataAsString(int page, int rows) {
-		
-		JSONArray parse_itemlist = this.getData(page, rows);
-		
-		String[] skySunny = { "0", "1", "2", "3", "4", "5" };
-		String[] skyCloudy = { "6", "7", "8" };
-		String[] skyBad = { "9", "10" };
 
-		// Build and return a string to display on the window instead of null.
+		JSONArray parse_itemlist = this.getData(page, rows);
+		for (int i = 0; i < parse_itemlist.size(); i++) {
+			JSONObject weatherObject = (JSONObject) parse_itemlist.get(i);
+
+			String[] skySunny = { "0", "1", "2", "3", "4", "5" };
+			String[] skyCloudy = { "6", "7", "8" };
+			String[] skyBad = { "9", "10" };
+
+			String skyKind = String.valueOf(weatherObject.get("category"));
+			String skyValue = String.valueOf(weatherObject.get("fcstValue"));
+			String baseDates = String.valueOf(weatherObject.get("baseDate"));
+			String baseTimes = String.valueOf(weatherObject.get("baseTime"));
+
+			String skyState = "";
+			// 동네예보 항목 값에 'SKY' 가 있을 경우
+			if (skyKind.contains("SKY")) {
+				
+				if (Arrays.asList(skySunny).contains(skyValue)) {
+					
+					skyState = "맑음";
+				} else if (Arrays.asList(skyCloudy).contains(skyValue)) {
+					
+					skyState = "구름많음";
+				} else if (Arrays.asList(skyBad).contains(skyValue)) {
+					
+					skyState = "흐림";
+				}
+
+				StringBuilder resultBuilder = new StringBuilder("성남시 중원구 복정동 기준");
+				resultBuilder.append("오늘의 날짜는 " + baseDates+" ,\n");
+				resultBuilder.append("측정 기준 시간은 " + baseTimes+"시 이며\n");
+				resultBuilder.append("현재 하늘 상태는 "+ skyState +" 입니다.");
+
+				return resultBuilder.toString();
+			}
+		}
 		
 		return null;
 	}
