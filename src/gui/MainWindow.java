@@ -102,6 +102,7 @@ public final class MainWindow extends WindowBase {
 		root.add(centerContainer, BorderLayout.CENTER);
 		
 		weatherLabel = new JLabel("Weather here");
+		weatherLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
 		root.add(weatherLabel, BorderLayout.SOUTH);
 		
 		//
@@ -109,7 +110,7 @@ public final class MainWindow extends WindowBase {
 		//
 		updateFriendList();
 		Weather weather = new Weather(62, 124, "JSON", System.currentTimeMillis());
-		weatherLabel.setText(weather.getDataAsString(1, 10));
+		weatherLabel.setText(weather.getDataAsHtml(1, 10));
 	}
 
 	@Override

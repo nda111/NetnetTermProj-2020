@@ -71,7 +71,6 @@ public class Weather {
 			conn.setRequestMethod("GET"); // 요청방식 설정 (GET)
 			conn.setRequestProperty("Content-type", "application/json");// 헤더의 메소드 정의
 
-			System.out.println("Response code: " + conn.getResponseCode());
 			BufferedReader rd;
 			// 프로토콜 반환 코드가 200이상 300이하인 경우 스트림으로 반환 결과값 받기
 			if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
@@ -95,7 +94,6 @@ public class Weather {
 			conn.disconnect();// 접속해제
 
 			String stringJson = sb.toString(); // stringbuilder-> string으로 변환하기
-			System.out.println(stringJson);
 
 			// string -> jsonobject 로
 			JSONParser jsonParser = new JSONParser();// json 객체 만들기, parser통해 파싱하기
@@ -103,9 +101,7 @@ public class Weather {
 			JSONObject parse_response = (JSONObject) jsonObj.get("response"); // response key값에 맞는 Value인 JSON객체를 가져오기
 			JSONObject parse_body = (JSONObject) parse_response.get("body"); // response 로 부터 body 찾아오기
 			JSONObject parse_items = (JSONObject) parse_body.get("items"); // body 로 부터 items 받아오기
-			JSONArray parse_itemlist = (JSONArray) parse_items.get("item"); // items로 부터 itemlist 를 받아오기 itemlist : 뒤에 [ 로
-																			// 시작하므로 jsonarray		
-			System.out.println(parse_itemlist);
+			JSONArray parse_itemlist = (JSONArray) parse_items.get("item"); // items로 부터 itemlist 를 받아오기 itemlist : 뒤에 [ 로 시작하므로 jsonarray
 			
 			return parse_itemlist;
 		} catch (IOException | ParseException e) {
@@ -119,6 +115,11 @@ public class Weather {
 	public String getDataAsString(int page, int rows) {
 
 		JSONArray parse_itemlist = this.getData(page, rows);
+		if (parse_itemlist == null) {
+			
+			return null;
+		}
+		
 		for (int i = 0; i < parse_itemlist.size(); i++) {
 			JSONObject weatherObject = (JSONObject) parse_itemlist.get(i);
 
@@ -156,5 +157,17 @@ public class Weather {
 		}
 		
 		return null;
+	}
+	
+	public String getDataAsHtml(int page, int rows) {
+		
+		String result = getDataAsString(page, rows);
+		
+		if (result != null) {
+			
+			result = String.format("<html>%s</html>", result.replace("\n", "<br/>"));
+		}
+		
+		return result;
 	}
 }
