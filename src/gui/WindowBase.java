@@ -192,21 +192,23 @@ public abstract class WindowBase extends JFrame {
 		switch (response) {
 		
 		case ANNOUNCE_ADD_FRIEND:
-			User user = User.parseJsonOrNull(params[0]);
+			String json = params[0];
+			User user = User.parseJsonOrNull(json);
 			Client.Friends.put(user.uid, user);
+			Client.FriendsIn.add(user.uid);
 			break;
 			
 		case ANNOUNCE_FRIEND_IN:
 			fUid = params[0];
-			Client.FriendsIn.add(fUid);
+			Client.FriendsIn.add(fUid.trim());
 			break;
 			
 		case ANNOUNCE_FRIEND_OUT:
 			fUid = params[0];
 			signOutTime = Long.parseLong(params[1]);
 			
-			Client.Friends.get(fUid).signOutTime = signOutTime;
-			Client.FriendsIn.remove(fUid);
+			//Client.Friends.get(fUid).signOutTime = signOutTime;
+			Client.FriendsIn.remove(fUid.trim());
 			break;
 			
 		default:

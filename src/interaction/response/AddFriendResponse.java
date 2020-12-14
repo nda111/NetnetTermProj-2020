@@ -55,20 +55,22 @@ public final class AddFriendResponse implements IResponse {
 		
 		if (response == EResponse.ADD_FRIEND_OK) {
 			
-			JSONObject friend = Server.Users.get(friendUid).toJson();
+			User fObj = Server.Users.get(friendUid);
+			JSONObject friend = fObj.toJson();
 			friend.put("password", null);
 			friend.put("friends", null);
 			
 			String jsonString = friend.toJSONString().replace('\n', ' ');
 			System.out.println(jsonString);
 			writer.println(jsonString);
+			writer.println(fObj.isSignedIn());
+			writer.flush();
 			
 			JSONObject meJson = me.toJson();
 			meJson.put("password", null);
 			meJson.put("friends", null);
 			
 			jsonString = meJson.toJSONString().replace('\n', ' ');
-			
 			if (Server.Announcers.containsKey(friendUid)) {
 				
 				PrintWriter friendWriter = Server.Announcers.get(friendUid);
@@ -83,8 +85,6 @@ public final class AddFriendResponse implements IResponse {
 				friendWriter.flush();
 			}
 		}
-		
-		writer.flush();
 		
 		return response;
 	}

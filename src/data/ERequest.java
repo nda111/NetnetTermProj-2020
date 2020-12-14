@@ -2,19 +2,24 @@ package data;
 
 public enum ERequest {
 	
-	ANNOUNCE((byte)0), // ¼­¹ö->Å¬¶óÀÌ¾ğÆ® (¼­¹ö°¡ ¼ö½ÅÇÒ ÀÏ ¾øÀ½)
-	ECHO((byte)1), // ¿¡ÄÚ ¿äÃ»
-	QUIT((byte)2), // Á¾·á ¼±¾ğ  
-	VALIDATE_UID((byte)3), // UID Áßº¹ °Ë»ç
-	SIGNUP((byte)4), // È¸¿ø°¡ÀÔ ¿äÃ» 
-	SIGNIN((byte)5), // ·Î±×ÀÎ ¿äÃ» 
-	SIGNOUT((byte)6), // ·Î±×¾Æ¿ô ¿äÃ»
-	ASK_UID((byte)7), // ¾ÆÀÌµğ Ã£±â 
-	ASK_FRIEND((byte)8), // Ä£±¸ ¸ñ·Ï ¿äÃ» 
-	ADD_FRIEND((byte)9); // Ä£±¸ Ãß°¡ 
+	ANNOUNCE((byte)0), // ì„œë²„->í´ë¼ì´ì–¸íŠ¸ (ì„œë²„ê°€ ìˆ˜ì‹ í•  ì¼ ì—†ìŒ)
+	ECHO((byte)1), // ì—ì½” ìš”ì²­
+	QUIT((byte)2), // ì¢…ë£Œ ì„ ì–¸  
+	VALIDATE_UID((byte)3), // UID ì¤‘ë³µ ê²€ì‚¬
+	SIGNUP((byte)4), // íšŒì›ê°€ì… ìš”ì²­ 
+	SIGNIN((byte)5), // ë¡œê·¸ì¸ ìš”ì²­ 
+	SIGNOUT((byte)6), // ë¡œê·¸ì•„ì›ƒ ìš”ì²­
+	ASK_UID((byte)7), // ì•„ì´ë”” ì°¾ê¸° 
+	ASK_FRIEND((byte)8), // ì¹œêµ¬ ëª©ë¡ ìš”ì²­ 
+	ADD_FRIEND((byte)9), // ì¹œêµ¬ ì¶”ê°€ 
+	ASK_CHAT((byte)10), // ëŒ€í™” ìš”ì²­ 
+	ACK_CHAT((byte)11), // ëŒ€í™” ìˆ˜ë½/ê±°ì ˆ
+	SAY_CHAT((byte)12), // ëŒ€í™” ë°œí™” 
+	END_CHAT((byte)13), // ëŒ€í™” ì¢…ë£Œ 
+	WHOAMI((byte)14); //ë‚´ì •ë³´
 
-	// ÆÄ¶ó¹ÌÅÍ·Î µé¾î¿Â °ª¿¡ ÇØ´çÇÏ´Â ERequest °´Ã¼¸¦ ¹İÈ¯ÇÑ´Ù.
-	// ¾Ë ¼ö ¾ø´Â ¿äÃ»ÀÌ¸é nullÀ» ¹İÈ¯ÇÑ´Ù.
+	// íŒŒë¼ë¯¸í„°ë¡œ ë“¤ì–´ì˜¨ ê°’ì— í•´ë‹¹í•˜ëŠ” ERequest ê°ì²´ë¥¼ ë°˜í™˜í•œë‹¤.
+	// ì•Œ ìˆ˜ ì—†ëŠ” ìš”ì²­ì´ë©´ nullì„ ë°˜í™˜í•œë‹¤.
 	// ex) value == 0 -> return ECHO
 	public static ERequest valueOf(byte value) {
 		
@@ -29,15 +34,15 @@ public enum ERequest {
 		return null;
 	}
 	
-	private byte value = -1; // ¿äÃ»ÀÇ ½Äº°
+	private byte value = -1; // ìš”ì²­ì˜ ì‹ë³„
 	
-	// »ı¼º
+	// ìƒì„±
 	private ERequest(byte value) {
 		
 		this.value = value;
 	}
 	
-	// ÀÌ ¿äÃ»ÀÇ ½Äº°ÀÚ¸¦ °¡Á®¿Â´Ù.
+	// ì´ ìš”ì²­ì˜ ì‹ë³„ìë¥¼ ê°€ì ¸ì˜¨ë‹¤.
 	public byte getValue() {
 		
 		return value;
