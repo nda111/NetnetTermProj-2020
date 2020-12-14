@@ -35,7 +35,10 @@ public enum EResponse {
 	ADD_FRIEND_ERR_UID(ERequest.ADD_FRIEND, (byte)1),		// 그런 애 없음 
 	ADD_FRIEND_ERR_ALREADY(ERequest.ADD_FRIEND, (byte)2),	// 이미 추가함 
 	ADD_FRIEND_ERR_YOU(ERequest.ADD_FRIEND, (byte)3),		// 본인 친구 추가 
-	ADD_FRIEND_ERR(ERequest.ADD_FRIEND, (byte)4);			// 에러 
+	ADD_FRIEND_ERR(ERequest.ADD_FRIEND, (byte)4),			// 에러 
+	
+	WHO_AM_I_OK(ERequest.WHOAMI, (byte)0), //내정보 넣기 성공
+	WHO_AM_I_NO(ERequest.WHOAMI, (byte)1); //내정보 넣기 실패
 
 	// 파라미터로 들어온 값에 해당하는 ERequest 객체를 반환한다.
 	// 알 수 없는 요청이면 null을 반환한다.

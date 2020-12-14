@@ -16,6 +16,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import app.Client;
 import data.ERequest;
 import data.EResponse;
 import interaction.IResponse;

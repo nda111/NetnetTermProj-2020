@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
@@ -23,6 +24,8 @@ import data.User;
 import interaction.RequestBase;
 
 public final class MainWindow extends WindowBase {
+	public MainWindow() {
+	}
 	
 	private JTextField friendTextField;
 	private JButton addFriendButton;
@@ -78,6 +81,7 @@ public final class MainWindow extends WindowBase {
 		
 		// meLabel
 		meLabel = new JLabel("Me");
+		//meLabel.setText(Client.Me);
 		meLabel.setBackground(Color.WHITE);
 		meLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 3, 0));
 		topContainer.add(meLabel, BorderLayout.SOUTH);
@@ -131,10 +135,29 @@ public final class MainWindow extends WindowBase {
 			private User friend = null;
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {				
+				
+				System.out.println(Client.Me);
 			
+				final String uid = friendTextField.getText().trim();
 				final String friendUid = friendTextField.getText().trim();
 				
+				new RequestBase(ERequest.WHOAMI, new String[] { uid }) {
+
+					@Override
+					protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+						
+						switch (response) {
+						
+						case WHO_AM_I_OK:	
+							
+						case WHO_AM_I_NO:
+						default:
+							JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
+						}
+					}
+				}.request();
+							
 				new RequestBase(ERequest.ADD_FRIEND, new String[] { friendUid }) {
 
 					@Override
@@ -207,6 +230,9 @@ public final class MainWindow extends WindowBase {
 	
 	private void updateFriendList() {
 		
-		// TODO: 
+		onlineList.removeAll();
+		offlineList.removeAll();
+		
+		
 	}
 }

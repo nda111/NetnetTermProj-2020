@@ -11,7 +11,8 @@ public enum ERequest {
 	SIGNOUT((byte)6), // 로그아웃 요청
 	ASK_UID((byte)7), // 아이디 찾기 
 	ASK_FRIEND((byte)8), // 친구 목록 요청 
-	ADD_FRIEND((byte)9); // 친구 추가 
+	ADD_FRIEND((byte)9), // 친구 추가 
+	WHOAMI((byte)10); //내정보
 
 	// 파라미터로 들어온 값에 해당하는 ERequest 객체를 반환한다.
 	// 알 수 없는 요청이면 null을 반환한다.
