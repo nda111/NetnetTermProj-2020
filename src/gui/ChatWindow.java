@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Scanner;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -86,6 +87,16 @@ public final class ChatWindow extends WindowBase {
 	}
 	
 	public ChatWindow(String fUid, int roomId) {
+		
+		super();
+
+		joinStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
+		chatStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
+		calcStyle.addAttribute(StyleConstants.Foreground, Color.GREEN);
+		calcStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
+		systemStyle.addAttribute(StyleConstants.Foreground, Color.LIGHT_GRAY);
+		systemStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
+		byeStyle.addAttribute(StyleConstants.Foreground, Color.RED);
 
 		this.setTitle(Client.Friends.get(fUid).name);
 		this.roomIdStr = Integer.toString(roomId);
@@ -116,9 +127,10 @@ public final class ChatWindow extends WindowBase {
 		root.setLayout(rootLayout);
 		
 		chatBox = new JTextArea();
-		chatBox.setEnabled(false);
+		chatBox.setEditable(false);
 		root.add(chatBox, BorderLayout.CENTER);
 		
+		root.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		root.add(bottomContainer, BorderLayout.SOUTH);
 	}
 
@@ -154,16 +166,17 @@ public final class ChatWindow extends WindowBase {
 		switch (response) {
 		
 		case ANNOUNCE_ACK_CHAT:
-			
-			final boolean bAccept = Boolean.parseBoolean(params[0]);
-			final String roomIdStr = params[1];
+			final boolean bAccept = Boolean.parseBoolean(params[0].trim());
+			final String roomIdStr = params[1].trim();
 			if (bAccept) {
-				
+
+				System.out.println("ACCEPTED");
 				this.roomIdStr = roomIdStr;
 				printText("\'" + getTitle() + "\' joined.", joinStyle);
 				setChatLocked(false);
 			} else {
-				
+
+				System.out.println("REJECTED");
 				backToParent();
 			}
 			break;

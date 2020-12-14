@@ -97,7 +97,6 @@ public final class SayChatResponse implements IResponse {
 						peerResponse = EResponse.ANNOUNCE_SAY_CHAT;
 					}
 					
-					
 					final String line = lineBuilder.toString();
 					for (PrintWriter cWriter : writers) {
 						
@@ -107,7 +106,7 @@ public final class SayChatResponse implements IResponse {
 						cWriter.print(1);
 						cWriter.print(' ');
 						
-						cWriter.print(line);
+						cWriter.println(line);
 						cWriter.flush();
 					}
 					
@@ -130,5 +129,4 @@ public final class SayChatResponse implements IResponse {
 		
 		return response;
 	}
-
 }

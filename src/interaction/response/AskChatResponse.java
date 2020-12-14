@@ -27,7 +27,7 @@ public final class AskChatResponse implements IResponse {
 				fWriter.print(EResponse.ANNOUNCE_ASK_CHAT.getValue());
 				fWriter.print(' ');
 				
-				fWriter.print(1);
+				fWriter.print(2);
 				fWriter.print(' ');
 				
 				fWriter.println(me.uid);

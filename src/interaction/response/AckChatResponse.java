@@ -17,14 +17,14 @@ public final class AckChatResponse implements IResponse{
 
 		EResponse response = EResponse.ACK_CHAT_LATE;
 		
-		final String askerUid = params[0];
-		final String bAcceptStr = params[1];
+		final String askerUid = params[0].trim();
+		final String bAcceptStr = params[1].trim();
 		final boolean bAccept = Boolean.parseBoolean(bAcceptStr);
 		
 		final User me = responser.getMeOrNull();
 		final Room room = new Room(askerUid, me.uid);
 		
-		if (me != null && Server.PendingChats.getOrDefault(askerUid, null) == me.uid) {
+		if (me != null && Server.PendingChats.getOrDefault(askerUid, null).equals(me.uid)) {
 			
 			Server.PendingChats.remove(askerUid);
 		

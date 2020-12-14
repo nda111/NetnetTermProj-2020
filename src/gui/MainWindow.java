@@ -189,9 +189,11 @@ public final class MainWindow extends WindowBase {
 				}
 			}
 		}.request();
-    
+
+		Weather weather = new Weather(62, 124, "JSON", System.currentTimeMillis());
 		weatherLabel = new JLabel("Weather here");
 		weatherLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+		weatherLabel.setText(weather.getDataAsHtml(1, 10));
 		root.add(weatherLabel, BorderLayout.SOUTH);
 	}
 
@@ -287,9 +289,7 @@ public final class MainWindow extends WindowBase {
 
 						if (sender.equals(onlineList)) {
 
-							JOptionPane.showMessageDialog(null, "Ask chat: " + user.uid);
-							// TODO: Ask chat
-
+							askChat(user.uid);
 						} else {
 
 							JOptionPane.showMessageDialog(null, "You can't chat with someone who's in offline.");
@@ -332,7 +332,7 @@ public final class MainWindow extends WindowBase {
 			break;
         
 		case ANNOUNCE_ASK_CHAT:
-			final String fUid = params[0];
+			final String fUid = params[0].trim();
 			final String fName = params[1];
 			final Boolean bAccept = JOptionPane.showConfirmDialog(this, 
 					fName + " want's to talk to you.\nWill you accept?", "Chat", 
@@ -348,7 +348,7 @@ public final class MainWindow extends WindowBase {
 					case ACK_CHAT_OK:
 						if (bAccept) {
 							
-							ChatWindow chatWin = new ChatWindow(fUid, reader.nextInt());
+							ChatWindow chatWin = new ChatWindow(fUid.trim(), reader.nextInt());
 							switchWindow(chatWin, false);
 						}
 						break;
