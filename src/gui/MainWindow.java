@@ -19,6 +19,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import app.Client;
 import data.ERequest;
@@ -27,14 +28,42 @@ import data.User;
 import interaction.RequestBase;
 
 public final class MainWindow extends WindowBase {
-	public MainWindow() {
+	
+	public WindowBase() {
+		super();
+
+		new RequestBase(ERequest.WHOAMI, new String[0]) {
+			
+
+			@Override
+			protected void handle(EResponse response, Scanner reader, PrintWriter writer) {	
+				switch (response) {
+				
+				case WHO_AM_I_OK:	
+					String jsonStr = reader.nextLine();
+										
+					User me = User.parseJsonOrNull(jsonStr);
+					if (me != null) {
+						
+						Client.Me = me;
+						meLabel.setText("Me - " + me);
+						
+						break;
+					}
+					meLabel.setText("Me - " + me);
+					
+				case WHO_AM_I_NO:
+					break;
+				}
+			}
+		}.request();
 	}
 	
 	private JTextField friendTextField;
 	private JButton addFriendButton;
 	private JLabel meLabel;
-	private JList<User> onlineList;
-	private JList<User> offlineList;
+	private JList<String> onlineList;
+	private JList<String> offlineList;
 	
 	private ArrayList<User> onlines = null;
 	private ArrayList<User> offlines = null;
@@ -139,40 +168,42 @@ public final class MainWindow extends WindowBase {
 		addFriendButton.addActionListener(new ActionListener() {
 			
 			private User friend = null;
-
+			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {				
-				
-				System.out.println(Client.Me);
-			
+						
 				final String uid = friendTextField.getText().trim();
 				final String friendUid = friendTextField.getText().trim();
-				
-				new RequestBase(ERequest.WHOAMI, new String[0]) {
 
-					@Override
-					protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+				public WindowBase() {
+					super();
+
+					new RequestBase(ERequest.WHOAMI, new String[0]) {
 						
-						switch (response) {
-						
-						case WHO_AM_I_OK:	
-							String jsonStr = reader.nextLine();
+
+						@Override
+						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {	
+							switch (response) {
 							
-							User me = User.parseJsonOrNull(jsonStr);
-							
-							if (me != null) {
+							case WHO_AM_I_OK:	
+								String jsonStr = reader.nextLine();
+													
+								User me = User.parseJsonOrNull(jsonStr);
+								if (me != null) {
+									
+									Client.Me = me;
+									meLabel.setText("Me - " + me);
+									
+									break;
+								}
+								meLabel.setText("Me - " + me);
 								
-								Client.Me = me;
-								
+							case WHO_AM_I_NO:
 								break;
 							}
-							
-						case WHO_AM_I_NO:
-						default:
-							JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
 						}
-					}
-				}.request();
+					}.request();
+				}
 							
 				new RequestBase(ERequest.ADD_FRIEND, new String[] { friendUid }) {
 
@@ -273,7 +304,13 @@ public final class MainWindow extends WindowBase {
 				offlinesNames.add(user.name);
 				
 			}
-		}	
+		}
+		//onlineList = new JLabel(onlineNames);
 		
 	}
+	
+	
+	
+	
+	
 }
