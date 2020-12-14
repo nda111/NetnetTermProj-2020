@@ -23,18 +23,20 @@ import interaction.response.SignInResponse;
 import interaction.response.SignOutResponse;
 import interaction.response.SignUpResponse;
 import interaction.response.ValidateUidResponse;
+import interaction.response.WhoAmIResponse;
+
 
 
 public class Server {
 	
-	public static final HashMap<ERequest, IResponse> Responses = new HashMap<>(); // ÀÀ´ä ¸®½º
+	public static final HashMap<ERequest, IResponse> Responses = new HashMap<>(); // ì‘ë‹µ ë¦¬ìŠ¤
 	
-	public static final HashMap<String, User> Users = new HashMap<>(); // »ç¿ëÀÚ ¸®½ºÆ®
+	public static final HashMap<String, User> Users = new HashMap<>(); // ì‚¬ìš©ì ë¦¬ìŠ¤íŠ¸
 	
-	public static final HashMap<String, PrintWriter> Announcers = new HashMap<>(); // Ãâ·Â½ºÆ®¸² 
+	public static final HashMap<String, PrintWriter> Announcers = new HashMap<>(); // ì¶œë ¥ìŠ¤íŠ¸ë¦¼ 
 	
-	public static final HashMap<String, String> PendingChats = new HashMap<>();	// ¼ö¶ô/°ÅÀı ´ë±â ÁßÀÎ Ã¤ÆÃ¹æÀÇ ¿äÃ»ÀÚ-¼ö½ÅÀÚ ½Ö 
-	public static final HashMap<Integer, Room> ChatRooms = new HashMap<>(); // ´ëÈ­ ÁßÀÎ Ã¤ÆÃ¹æ 
+	public static final HashMap<String, String> PendingChats = new HashMap<>();	// ìˆ˜ë½/ê±°ì ˆ ëŒ€ê¸° ì¤‘ì¸ ì±„íŒ…ë°©ì˜ ìš”ì²­ì-ìˆ˜ì‹ ì ìŒ 
+	public static final HashMap<Integer, Room> ChatRooms = new HashMap<>(); // ëŒ€í™” ì¤‘ì¸ ì±„íŒ…ë°© 
 	
 	public static ServerSocket server = null;
 	
@@ -45,7 +47,7 @@ public class Server {
 		
 		try {
 
-			// Æ÷Æ®³Ñ¹ö¸¦ ¹Ş¾Æ¿Â´Ù
+			// í¬íŠ¸ë„˜ë²„ë¥¼ ë°›ì•„ì˜¨ë‹¤
 			String Port = null;
 			File file = new File("./server_info.txt");
 			Scanner scanner = new Scanner(file);
@@ -54,15 +56,15 @@ public class Server {
 			scanner.close();
 
 			server = new ServerSocket(port);
-			System.out.println("¼­¹öÁØºñ¿Ï·á");
+			System.out.println("ì„œë²„ì¤€ë¹„ì™„ë£Œ");
 
 			while (true) {
 
 				Socket client = server.accept();
 				
-				ServerResponser handler = new ServerResponser(client); // ½º·¹µå »ı¼º
+				ServerResponser handler = new ServerResponser(client); // ìŠ¤ë ˆë“œ ìƒì„±
 				Thread thread = new Thread(handler);
-				thread.start(); // ½º·¹µå ½ÃÀÛ
+				thread.start(); // ìŠ¤ë ˆë“œ ì‹œì‘
 			} // while
 		} catch (IOException e) {
 
@@ -89,6 +91,9 @@ public class Server {
 		// Friend
 		Responses.put(ERequest.ADD_FRIEND, new AddFriendResponse());
 		
+		// whoamI
+		Responses.put(ERequest.WHOAMI, new WhoAmIResponse());
+    
 		// Chat
 		Responses.put(ERequest.ASK_CHAT, new AskChatResponse());
 		Responses.put(ERequest.ACK_CHAT, new AckChatResponse());

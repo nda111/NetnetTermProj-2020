@@ -2,63 +2,66 @@ package data;
 
 public enum EResponse {
 
-	ANNOUNCE_ADD_FRIEND(ERequest.ANNOUNCE, (byte)0), // Ä£±¸ Ãß°¡ 
-	ANNOUNCE_FRIEND_IN(ERequest.ANNOUNCE, (byte)1),  // Ä£±¸ Á¢¼Ó 
-	ANNOUNCE_FRIEND_OUT(ERequest.ANNOUNCE, (byte)2), // Ä£±¸ ¿¬°á ÇØÁ¦ 
+	ANNOUNCE_ADD_FRIEND(ERequest.ANNOUNCE, (byte)0), // ì¹œêµ¬ ì¶”ê°€ 
+	ANNOUNCE_FRIEND_IN(ERequest.ANNOUNCE, (byte)1),  // ì¹œêµ¬ ì ‘ì† 
+	ANNOUNCE_FRIEND_OUT(ERequest.ANNOUNCE, (byte)2), // ì¹œêµ¬ ì—°ê²° í•´ì œ 
 	
-	ANNOUNCE_ASK_CHAT(ERequest.ANNOUNCE, (byte)3), 	// ´ëÈ­ ½ÅÃ» Àü´Ş 
-	ANNOUNCE_ACK_CHAT(ERequest.ANNOUNCE, (byte)4), 	// ´ëÈ­ ½ÅÃ» °á°ú Àü´Ş 
-	ANNOUNCE_SAY_CHAT(ERequest.ANNOUNCE, (byte)5), 	// ´ëÈ­ ³»¿ë Àü´Ş 
-	ANNOUNCE_CALC_CHAT(ERequest.ANNOUNCE, (byte)6), // °è»ê °á°ú Àü´Ş 
-	ANNOUNCE_END_CHAT(ERequest.ANNOUNCE, (byte)6),	// ´ëÈ­ Á¾·á Àü´Ş 
+	ANNOUNCE_ASK_CHAT(ERequest.ANNOUNCE, (byte)3), 	// ëŒ€í™” ì‹ ì²­ ì „ë‹¬ 
+	ANNOUNCE_ACK_CHAT(ERequest.ANNOUNCE, (byte)4), 	// ëŒ€í™” ì‹ ì²­ ê²°ê³¼ ì „ë‹¬ 
+	ANNOUNCE_SAY_CHAT(ERequest.ANNOUNCE, (byte)5), 	// ëŒ€í™” ë‚´ìš© ì „ë‹¬ 
+	ANNOUNCE_CALC_CHAT(ERequest.ANNOUNCE, (byte)6), // ê³„ì‚° ê²°ê³¼ ì „ë‹¬ 
+	ANNOUNCE_END_CHAT(ERequest.ANNOUNCE, (byte)6),	// ëŒ€í™” ì¢…ë£Œ ì „ë‹¬ 
 
-	ECHO_OK(ERequest.ECHO, (byte)0), // ¿¡ÄÚ ÀÀ´ä
+	ECHO_OK(ERequest.ECHO, (byte)0), // ì—ì½” ì‘ë‹µ
 	
-	QUIT_OK(ERequest.QUIT, (byte)0), // Á¾·á ¼ö¶ô 
+	QUIT_OK(ERequest.QUIT, (byte)0), // ì¢…ë£Œ ìˆ˜ë½ 
 	
-	VALIDATE_UID_OK(ERequest.VALIDATE_UID, (byte)0), // UID »ç¿ë °¡´É 
-	VALIDATE_UID_NO(ERequest.VALIDATE_UID, (byte)1), // UID »ç¿ë ºÒ°¡´É
+	VALIDATE_UID_OK(ERequest.VALIDATE_UID, (byte)0), // UID ì‚¬ìš© ê°€ëŠ¥ 
+	VALIDATE_UID_NO(ERequest.VALIDATE_UID, (byte)1), // UID ì‚¬ìš© ë¶ˆê°€ëŠ¥
 	
-	SIGNUP_OK(ERequest.SIGNUP, (byte)0),	// °¡ÀÔ ¼º°ø 
-	SIGNUP_ERR(ERequest.SIGNUP, (byte)1), 	// °¡ÀÔ ½ÇÆĞ 
+	SIGNUP_OK(ERequest.SIGNUP, (byte)0),	// ê°€ì… ì„±ê³µ 
+	SIGNUP_ERR(ERequest.SIGNUP, (byte)1), 	// ê°€ì… ì‹¤íŒ¨ 
 	
-	SIGNIN_OK(ERequest.SIGNIN, (byte)0),			// ·Î±×ÀÎ ¼º°ø 
-	SIGNIN_ERR_PW(ERequest.SIGNIN, (byte)1),		// ·Î±×ÀÎ ºñ¹Ğ¹øÈ£ Æ²
-	SIGNIN_ERR_MULTI(ERequest.SIGNIN, (byte)2),		// ·Î±×ÀÎ ¿©·¯ ±â±â 
-	SIGNIN_ERR_NO_UID(ERequest.SIGNIN, (byte)3),	// ·Î±×ÀÎ ¾ø´Â °èÁ¤
+	SIGNIN_OK(ERequest.SIGNIN, (byte)0),			// ë¡œê·¸ì¸ ì„±ê³µ 
+	SIGNIN_ERR_PW(ERequest.SIGNIN, (byte)1),		// ë¡œê·¸ì¸ ë¹„ë°€ë²ˆí˜¸ í‹€
+	SIGNIN_ERR_MULTI(ERequest.SIGNIN, (byte)2),		// ë¡œê·¸ì¸ ì—¬ëŸ¬ ê¸°ê¸° 
+	SIGNIN_ERR_NO_UID(ERequest.SIGNIN, (byte)3),	// ë¡œê·¸ì¸ ì—†ëŠ” ê³„ì •
 	
-	SIGNOUT_OK(ERequest.SIGNOUT, (byte)0),			// ·Î±×¾Æ¿ô ¼º°ø 
-	SIGNOUT_ERR_NOT_IN(ERequest.SIGNOUT, (byte)1), 	// ·Î±×¾Æ¿ô ½ÇÆĞ (·Î±×ÀÎ ÇÑ Àû ¾øÀ½)
-	SIGNOUT_ERR(ERequest.SIGNOUT, (byte)2),			// ·Î±×¾Æ¿ô ½ÇÆĞ (±× ¿Ü ÀÌÀ¯)
+	SIGNOUT_OK(ERequest.SIGNOUT, (byte)0),			// ë¡œê·¸ì•„ì›ƒ ì„±ê³µ 
+	SIGNOUT_ERR_NOT_IN(ERequest.SIGNOUT, (byte)1), 	// ë¡œê·¸ì•„ì›ƒ ì‹¤íŒ¨ (ë¡œê·¸ì¸ í•œ ì  ì—†ìŒ)
+	SIGNOUT_ERR(ERequest.SIGNOUT, (byte)2),			// ë¡œê·¸ì•„ì›ƒ ì‹¤íŒ¨ (ê·¸ ì™¸ ì´ìœ )
 
-	ASK_UID_OK(ERequest.ASK_UID, (byte)0),	// ÀÖÀ½
-	ASK_UID_NO(ERequest.ASK_UID, (byte)1),	// ¾øÀ½ 
+	ASK_UID_OK(ERequest.ASK_UID, (byte)0),	// ìˆìŒ
+	ASK_UID_NO(ERequest.ASK_UID, (byte)1),	// ì—†ìŒ 
 	
-	ASK_FRIEND_OK(ERequest.ASK_FRIEND, (byte)0),	// ¤·¤» 
-	ASK_FRIEND_NO(ERequest.ASK_FRIEND, (byte)1),	// ¤¤¤¤ 
+	ASK_FRIEND_OK(ERequest.ASK_FRIEND, (byte)0),	// ã…‡ã…‹ 
+	ASK_FRIEND_NO(ERequest.ASK_FRIEND, (byte)1),	// ã„´ã„´ 
 	
-	ADD_FRIEND_OK(ERequest.ADD_FRIEND, (byte)0),			// ¼º°ø 
-	ADD_FRIEND_ERR_UID(ERequest.ADD_FRIEND, (byte)1),		// ±×·± ¾Ö ¾øÀ½ 
-	ADD_FRIEND_ERR_ALREADY(ERequest.ADD_FRIEND, (byte)2),	// ÀÌ¹Ì Ãß°¡ÇÔ 
-	ADD_FRIEND_ERR_YOU(ERequest.ADD_FRIEND, (byte)3),		// º»ÀÎ Ä£±¸ Ãß°¡ 
-	ADD_FRIEND_ERR(ERequest.ADD_FRIEND, (byte)4),			// ¿¡·¯ 
+	ADD_FRIEND_OK(ERequest.ADD_FRIEND, (byte)0),			// ì„±ê³µ 
+	ADD_FRIEND_ERR_UID(ERequest.ADD_FRIEND, (byte)1),		// ê·¸ëŸ° ì•  ì—†ìŒ 
+	ADD_FRIEND_ERR_ALREADY(ERequest.ADD_FRIEND, (byte)2),	// ì´ë¯¸ ì¶”ê°€í•¨ 
+	ADD_FRIEND_ERR_YOU(ERequest.ADD_FRIEND, (byte)3),		// ë³¸ì¸ ì¹œêµ¬ ì¶”ê°€ 
+	ADD_FRIEND_ERR(ERequest.ADD_FRIEND, (byte)4),			// ì—ëŸ¬ 
 
-	ASK_CHAT_OK(ERequest.ASK_CHAT, (byte)0), 		// ¤·¤» ¹°¾îº¼°Ô 
-	ASK_CHAT_OFFLINE(ERequest.ASK_CHAT, (byte)1), 	// °Â ¿ÀÇÁ¶óÀÎÀÌ¶ó ¾È µÊ 
-	ASK_CHAT_ERR(ERequest.ASK_CHAT, (byte)2), 		// ¿¡·¯ ³µÀ¸´Ï±î ´Ù½Ã ÇØºÁ 
+	ASK_CHAT_OK(ERequest.ASK_CHAT, (byte)0), 		// ã…‡ã…‹ ë¬¼ì–´ë³¼ê²Œ 
+	ASK_CHAT_OFFLINE(ERequest.ASK_CHAT, (byte)1), 	// ê±” ì˜¤í”„ë¼ì¸ì´ë¼ ì•ˆ ë¨ 
+	ASK_CHAT_ERR(ERequest.ASK_CHAT, (byte)2), 		// ì—ëŸ¬ ë‚¬ìœ¼ë‹ˆê¹Œ ë‹¤ì‹œ í•´ë´ 
 
-	ACK_CHAT_OK(ERequest.ASK_CHAT, (byte)0),		// ¤·¤» Àü´ŞÇÒ°Ô 
-	ACK_CHAT_LATE(ERequest.ASK_CHAT, (byte)1),		// ´Ê¾ú¾î 
+	ACK_CHAT_OK(ERequest.ASK_CHAT, (byte)0),		// ã…‡ã…‹ ì „ë‹¬í• ê²Œ 
+	ACK_CHAT_LATE(ERequest.ASK_CHAT, (byte)1),		// ëŠ¦ì—ˆì–´ 
 	
-	SAY_CHAT_OK(ERequest.SAY_CHAT, (byte)0),		// ¸»ÇÏ±â ¤·¤» 
-	SAY_CHAT_NO_ROOM(ERequest.SAY_CHAT, (byte)1), 	// ¹æ ¾ø¾îÁü 
-	SAY_CHAT_ERR(ERequest.SAY_CHAT, (byte)2),		// ¿¡·¯ 
+	SAY_CHAT_OK(ERequest.SAY_CHAT, (byte)0),		// ë§í•˜ê¸° ã…‡ã…‹ 
+	SAY_CHAT_NO_ROOM(ERequest.SAY_CHAT, (byte)1), 	// ë°© ì—†ì–´ì§ 
+	SAY_CHAT_ERR(ERequest.SAY_CHAT, (byte)2),		// ì—ëŸ¬ 
 
-	END_CHAT_OK(ERequest.END_CHAT, (byte)0),	// ¤·¤» 
-	END_CHAT_ERR(ERequest.END_CHAT, (byte)1);	// ¿¡·¯ 
+	END_CHAT_OK(ERequest.END_CHAT, (byte)0),	// ã…‡ã…‹ 
+	END_CHAT_ERR(ERequest.END_CHAT, (byte)1),	// ì—ëŸ¬ 
+	
+	WHO_AM_I_OK(ERequest.WHOAMI, (byte)0), //ë‚´ì •ë³´ ë„£ê¸° ì„±ê³µ
+	WHO_AM_I_NO(ERequest.WHOAMI, (byte)1); //ë‚´ì •ë³´ ë„£ê¸° ì‹¤íŒ¨
 
-	// ÆÄ¶ó¹ÌÅÍ·Î µé¾î¿Â °ª¿¡ ÇØ´çÇÏ´Â ERequest °´Ã¼¸¦ ¹İÈ¯ÇÑ´Ù.
-	// ¾Ë ¼ö ¾ø´Â ¿äÃ»ÀÌ¸é nullÀ» ¹İÈ¯ÇÑ´Ù.
+	// íŒŒë¼ë¯¸í„°ë¡œ ë“¤ì–´ì˜¨ ê°’ì— í•´ë‹¹í•˜ëŠ” ERequest ê°ì²´ë¥¼ ë°˜í™˜í•œë‹¤.
+	// ì•Œ ìˆ˜ ì—†ëŠ” ìš”ì²­ì´ë©´ nullì„ ë°˜í™˜í•œë‹¤.
 	// ex) value == 0 -> return ECHO
 	public static EResponse valueOf(short value) {
 		
@@ -73,24 +76,24 @@ public enum EResponse {
 		return null;
 	}
 	
-	private short value = -1; // ¿äÃ»ÀÇ ½Äº°
+	private short value = -1; // ìš”ì²­ì˜ ì‹ë³„
 	
-	// »ı¼º
+	// ìƒì„±
 	private EResponse(ERequest request, byte value) {
 		
 		this.value = (short) ((request.getValue() << 8) | value);
 		
 		// 0000 0000 | 0000 0000
-		// ¿äÃ» ID   | Yes/No/...
+		// ìš”ì²­ ID   | Yes/No/...
 	}
 	
-	// ÀÌ ¿äÃ»ÀÇ ½Äº°ÀÚ¸¦ °¡Á®¿Â´Ù.
+	// ì´ ìš”ì²­ì˜ ì‹ë³„ìë¥¼ ê°€ì ¸ì˜¨ë‹¤.
 	public short getValue() {
 		
 		return value;
 	}
 	
-	// ÀÌ ÀÀ´äÀÌ ¾î¶² ¿äÃ»¿¡ ´ëÇÑ ÀÀ´äÀÎÁö °¡Á®¿Â´Ù.
+	// ì´ ì‘ë‹µì´ ì–´ë–¤ ìš”ì²­ì— ëŒ€í•œ ì‘ë‹µì¸ì§€ ê°€ì ¸ì˜¨ë‹¤.
 	public ERequest getRequest() {
 		
 		final byte requestId = (byte) (value >> 8);
@@ -98,7 +101,7 @@ public enum EResponse {
 		return ERequest.valueOf(requestId);
 	}
 	
-	// ¿äÃ»¿¡ ´ëÇØ ¾î¶² ÀÀ´äÀÎÁö °¡Á®¿Â´Ù.
+	// ìš”ì²­ì— ëŒ€í•´ ì–´ë–¤ ì‘ë‹µì¸ì§€ ê°€ì ¸ì˜¨ë‹¤.
 	public byte getResponse() {
 		
 		return (byte) (value & 0xFFFFFF);

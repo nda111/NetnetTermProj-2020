@@ -20,15 +20,16 @@ public class AskFriendResponse implements IResponse {
 		
 			writer.println(EResponse.ASK_FRIEND_OK.getValue());
 			
-			writer.println(user.friends.size());
 			for (String uid : user.friends) {
 				
 				User friend = Server.Users.getOrDefault(uid, null);
 				if (friend != null) {
 					
 					writer.println(friend.toJson().toJSONString().replace('\n', ' ')); 
+					writer.println(friend.isSignedIn());
 				}
 			}
+			writer.println("end");
 			writer.flush();
 			
 			return EResponse.ASK_FRIEND_OK;
