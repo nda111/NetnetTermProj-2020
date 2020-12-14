@@ -289,6 +289,9 @@ public final class MainWindow extends WindowBase {
 							JOptionPane.showMessageDialog(null, "Ask chat: " + user.uid);
 							// TODO: Ask chat
 
+						} else {
+
+							JOptionPane.showMessageDialog(null, "You can't chat with someone who's in offline.");
 						}
 					}
 				}
