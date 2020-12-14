@@ -21,6 +21,7 @@ import data.ERequest;
 import data.EResponse;
 import data.User;
 import interaction.RequestBase;
+import util.Weather;
 
 public final class MainWindow extends WindowBase {
 	
@@ -29,6 +30,7 @@ public final class MainWindow extends WindowBase {
 	private JLabel meLabel;
 	private JList<User> onlineList;
 	private JList<User> offlineList;
+	private JLabel weatherLabel;
 
 	@Override
 	public void configureWindow() {
@@ -99,10 +101,16 @@ public final class MainWindow extends WindowBase {
 		root.add(topContainer, BorderLayout.NORTH);
 		root.add(centerContainer, BorderLayout.CENTER);
 		
+		weatherLabel = new JLabel("Weather here");
+		weatherLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+		root.add(weatherLabel, BorderLayout.SOUTH);
+		
 		//
 		// Set values
 		//
 		updateFriendList();
+		Weather weather = new Weather(62, 124, "JSON", System.currentTimeMillis());
+		weatherLabel.setText(weather.getDataAsHtml(1, 10));
 	}
 
 	@Override
