@@ -7,6 +7,9 @@ import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
@@ -32,6 +35,9 @@ public final class MainWindow extends WindowBase {
 	private JLabel meLabel;
 	private JList<User> onlineList;
 	private JList<User> offlineList;
+	
+	private ArrayList<User> onlines = null;
+	private ArrayList<User> offlines = null;
 
 	@Override
 	public void configureWindow() {
@@ -142,7 +148,7 @@ public final class MainWindow extends WindowBase {
 				final String uid = friendTextField.getText().trim();
 				final String friendUid = friendTextField.getText().trim();
 				
-				new RequestBase(ERequest.WHOAMI, new String[] { uid }) {
+				new RequestBase(ERequest.WHOAMI, new String[0]) {
 
 					@Override
 					protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
@@ -150,6 +156,16 @@ public final class MainWindow extends WindowBase {
 						switch (response) {
 						
 						case WHO_AM_I_OK:	
+							String jsonStr = reader.nextLine();
+							
+							User me = User.parseJsonOrNull(jsonStr);
+							
+							if (me != null) {
+								
+								Client.Me = me;
+								
+								break;
+							}
 							
 						case WHO_AM_I_NO:
 						default:
@@ -233,6 +249,31 @@ public final class MainWindow extends WindowBase {
 		onlineList.removeAll();
 		offlineList.removeAll();
 		
+		onlines = new ArrayList<>();
+		offlines = new ArrayList<>();
+		ArrayList<String> onlineNames = new ArrayList<>();
+		ArrayList<String> offlinesNames = new ArrayList<>();
+		
+		for( Map.Entry<String, User> friend : Client.Friends.entrySet() ){
+			String uid = friend.getKey();
+			User user = friend.getValue();
+
+			if (Client.FriendsIn.contains(uid)) {
+
+				// 온라인에 추가
+				onlines.add(user);
+				
+				onlineNames.add(user.name);
+			}
+			else {
+
+				// 오프라인에 추가
+				offlines.add(user);
+				
+				offlinesNames.add(user.name);
+				
+			}
+		}	
 		
 	}
 }

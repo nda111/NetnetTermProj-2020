@@ -18,6 +18,8 @@ import interaction.response.SignInResponse;
 import interaction.response.SignOutResponse;
 import interaction.response.SignUpResponse;
 import interaction.response.ValidateUidResponse;
+import interaction.response.WhoAmIResponse;
+
 
 
 public class Server {
@@ -80,6 +82,9 @@ public class Server {
 		
 		// Friend
 		Responses.put(ERequest.ADD_FRIEND, new AddFriendResponse());
+		
+		// whoamI
+		Responses.put(ERequest.WHOAMI, new WhoAmIResponse());
 	}
 	
 	// Load all user info from files before the server starts.
