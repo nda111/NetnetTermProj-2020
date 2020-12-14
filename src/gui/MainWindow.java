@@ -27,6 +27,7 @@ import data.ERequest;
 import data.EResponse;
 import data.User;
 import interaction.RequestBase;
+import util.Weather;
 
 public final class MainWindow extends WindowBase {
 
@@ -35,17 +36,13 @@ public final class MainWindow extends WindowBase {
 	private JLabel meLabel;
 	private JList<String> onlineList;
 	private JList<String> offlineList;
+	private JLabel weatherLabel;
 
 	private ArrayList<User> onlines;
 	private ArrayList<User> offlines;
 	private DefaultListModel<String> onlineModel;
 	private DefaultListModel<String> offlineModel;
-	
-	public MainWindow() {
-		
-		super();
-	}
-
+  
 	@Override
 	public void configureWindow() {
 
@@ -192,6 +189,10 @@ public final class MainWindow extends WindowBase {
 				}
 			}
 		}.request();
+    
+		weatherLabel = new JLabel("Weather here");
+		weatherLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+		root.add(weatherLabel, BorderLayout.SOUTH);
 	}
 
 	@Override
@@ -329,7 +330,41 @@ public final class MainWindow extends WindowBase {
 		case ANNOUNCE_FRIEND_OUT:
 			updateFriendList();
 			break;
+        
+		case ANNOUNCE_ASK_CHAT:
+			final String fUid = params[0];
+			final String fName = params[1];
+			final Boolean bAccept = JOptionPane.showConfirmDialog(this, 
+					fName + " want's to talk to you.\nWill you accept?", "Chat", 
+					JOptionPane.YES_NO_OPTION) == 0;
 
+			new RequestBase(ERequest.ACK_CHAT, new String[] { fUid, bAccept.toString() }) {
+
+				@Override
+				protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+
+					switch (response) {
+					
+					case ACK_CHAT_OK:
+						if (bAccept) {
+							
+							ChatWindow chatWin = new ChatWindow(fUid, reader.nextInt());
+							switchWindow(chatWin, false);
+						}
+						break;
+						
+					case ACK_CHAT_LATE:
+						JOptionPane.showMessageDialog(null, "The opponent has left.");
+						break;
+						
+					default:
+						JOptionPane.showMessageDialog(null, "Unknown Error");
+						break;
+					}
+				}
+			}.request();
+			break;
+        
 		default:
 			break;
 		}
@@ -367,5 +402,17 @@ public final class MainWindow extends WindowBase {
 
 		onlineList.setModel(onlineModel);
 		offlineList.setModel(offlineModel);
+  }
+	
+	private void askChat(String fUid) {
+		
+		if (Client.FriendsIn.contains(fUid)) {
+			
+			ChatWindow chatWin = new ChatWindow(fUid);
+			switchWindow(chatWin, false);
+		} else {
+
+			JOptionPane.showMessageDialog(null, "The opponent is offline.");
+		}
 	}
 }
