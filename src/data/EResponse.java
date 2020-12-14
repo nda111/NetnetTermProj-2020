@@ -6,10 +6,11 @@ public enum EResponse {
 	ANNOUNCE_FRIEND_IN(ERequest.ANNOUNCE, (byte)1),  // 친구 접속 
 	ANNOUNCE_FRIEND_OUT(ERequest.ANNOUNCE, (byte)2), // 친구 연결 해제 
 	
-	ANNOUNCE_ASK_CHAT(ERequest.ANNOUNCE, (byte)3), // 대화 신청 전달 
-	ANNOUNCE_ACK_CHAT(ERequest.ANNOUNCE, (byte)4), // 대화 신청 결과 전달 
-	ANNOUNCE_SAY_CHAT(ERequest.ANNOUNCE, (byte)5), // 대화 내용 전달 
-	ANNOUNCE_END_CHAT(ERequest.ANNOUNCE, (byte)6), // 대화 종료 전달 
+	ANNOUNCE_ASK_CHAT(ERequest.ANNOUNCE, (byte)3), 	// 대화 신청 전달 
+	ANNOUNCE_ACK_CHAT(ERequest.ANNOUNCE, (byte)4), 	// 대화 신청 결과 전달 
+	ANNOUNCE_SAY_CHAT(ERequest.ANNOUNCE, (byte)5), 	// 대화 내용 전달 
+	ANNOUNCE_CALC_CHAT(ERequest.ANNOUNCE, (byte)6), // 계산 결과 전달 
+	ANNOUNCE_END_CHAT(ERequest.ANNOUNCE, (byte)6),	// 대화 종료 전달 
 
 	ECHO_OK(ERequest.ECHO, (byte)0), // 에코 응답
 	

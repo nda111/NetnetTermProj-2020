@@ -2,6 +2,8 @@ package interaction.response;
 
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import app.Server;
 import app.ServerResponser;
@@ -38,13 +40,68 @@ public final class SayChatResponse implements IResponse {
 					final StringBuilder lineBuilder = new StringBuilder();
 					lineBuilder.append(DateTime.millisToShortTimeString(now) + ' ');
 					lineBuilder.append(me.name + ": ");
-					lineBuilder.append(text);
+
+					final String MathExpressionRegex = "([+-]?([0-9]*[.])?[0-9]+)[\\+\\-\\*\\/](([+-]?([0-9]*[.])?[0-9]+))$";
+					EResponse peerResponse = null;
+					if (text.matches(MathExpressionRegex)) {
+						
+						Pattern numPattern = Pattern.compile("[+-]?([0-9]*[.])?[0-9]+");
+						Matcher numMatcher = numPattern.matcher(text);
+
+						numMatcher.find();
+						String firstStr = numMatcher.group();
+						double first = Double.parseDouble(firstStr);
+						numMatcher.find();
+						double second = Double.parseDouble(numMatcher.group());
+						char operation = text.charAt(firstStr.length());
+						
+						double result = -1;
+						switch (operation) {
+						
+						case '+':
+							result = first + second;
+							break;
+							
+						case '-':
+							result = first - second;
+							break;
+							
+						case '*':
+							result = first * second;
+							break;
+							
+						case '/':
+							if (second != 0) {
+								
+								result = first / second;
+							} else {
+								
+								result = Double.NaN;
+							}
+							break;
+							
+						default:
+							result = Double.NaN;
+							break;
+						}
+						lineBuilder.append(first + " ");
+						lineBuilder.append(operation + " ");
+						lineBuilder.append(second + " = ");
+						lineBuilder.append(result);
+						
+						peerResponse = EResponse.ANNOUNCE_CALC_CHAT;
+						
+					} else {
+
+						lineBuilder.append(text);	
+						peerResponse = EResponse.ANNOUNCE_SAY_CHAT;
+					}
+					
 					
 					final String line = lineBuilder.toString();
-					
 					for (PrintWriter cWriter : writers) {
 						
-						cWriter.print(EResponse.ANNOUNCE_SAY_CHAT.getValue());
+						cWriter.print(peerResponse.getValue());
 						cWriter.print(' ');
 						
 						cWriter.print(1);

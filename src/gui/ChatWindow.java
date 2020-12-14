@@ -28,7 +28,9 @@ import util.DateTime;
 public final class ChatWindow extends WindowBase {
 	
 	private final StyleContext styles = new StyleContext();
+	private final Style joinStyle = styles.addStyle("JOIN", null);
 	private final Style chatStyle = styles.addStyle("CHAT", null);
+	private final Style calcStyle = styles.addStyle("CALC", null);
 	private final Style systemStyle = styles.addStyle("SYSTEM", null);
 	private final Style byeStyle = styles.addStyle("BYE", null);
 	
@@ -44,8 +46,11 @@ public final class ChatWindow extends WindowBase {
 	public ChatWindow(String fUid) {
 		
 		super();
-		
+
+		joinStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
 		chatStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
+		calcStyle.addAttribute(StyleConstants.Foreground, Color.GREEN);
+		calcStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
 		systemStyle.addAttribute(StyleConstants.Foreground, Color.LIGHT_GRAY);
 		systemStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
 		byeStyle.addAttribute(StyleConstants.Foreground, Color.RED);
@@ -85,7 +90,7 @@ public final class ChatWindow extends WindowBase {
 		this.setTitle(Client.Friends.get(fUid).name);
 		this.roomIdStr = Integer.toString(roomId);
 		
-		printText("\'" + Client.Me.name + "\' joined.", systemStyle);
+		printText("\'" + Client.Me.name + "\' joined.", joinStyle);
 	}
 
 	@Override
@@ -144,6 +149,8 @@ public final class ChatWindow extends WindowBase {
 		
 		super.handleAnnouncement(response, params);
 		
+		String line;
+		
 		switch (response) {
 		
 		case ANNOUNCE_ACK_CHAT:
@@ -153,7 +160,7 @@ public final class ChatWindow extends WindowBase {
 			if (bAccept) {
 				
 				this.roomIdStr = roomIdStr;
-				printText("\'" + getTitle() + "\' joined.", systemStyle);
+				printText("\'" + getTitle() + "\' joined.", joinStyle);
 				setChatLocked(false);
 			} else {
 				
@@ -162,8 +169,13 @@ public final class ChatWindow extends WindowBase {
 			break;
 			
 		case ANNOUNCE_SAY_CHAT:
-			final String line = params[0];
+			line = params[0];
 			printText(line, chatStyle);
+			break;
+			
+		case ANNOUNCE_CALC_CHAT:
+			line = params[0];
+			printText(line, calcStyle);
 			break;
 			
 		case ANNOUNCE_END_CHAT:
