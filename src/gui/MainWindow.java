@@ -36,41 +36,14 @@ public final class MainWindow extends WindowBase {
 	private JList<String> onlineList;
 	private JList<String> offlineList;
 
-	private ArrayList<User> onlines = new ArrayList<>();
-	private ArrayList<User> offlines = new ArrayList<>();
-
-	private DefaultListModel<String> onlineModel = null;
-	private DefaultListModel<String> offlineModel = null;
-
+	private ArrayList<User> onlines;
+	private ArrayList<User> offlines;
+	private DefaultListModel<String> onlineModel;
+	private DefaultListModel<String> offlineModel;
+	
 	public MainWindow() {
-
+		
 		super();
-
-		new RequestBase(ERequest.WHOAMI, new String[0]) {
-
-			@Override
-			protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
-
-				switch (response) {
-
-				case WHO_AM_I_OK:
-					String jsonStr = reader.nextLine();
-
-					User me = User.parseJsonOrNull(jsonStr);
-					if (me != null) {
-
-						Client.Me = me;
-						meLabel.setText(me.name);
-						break;
-					}
-
-				case WHO_AM_I_NO:
-					System.out.println("Unknown Error: Please try again.");
-					System.exit(0);
-					break;
-				}
-			}
-		}.request();
 	}
 
 	@Override
@@ -117,67 +90,16 @@ public final class MainWindow extends WindowBase {
 		JPanel centerContainer = new JPanel(fillLayout);
 		centerContainer.setBorder(BorderFactory.createEmptyBorder(0, 10, 5, 10));
 
-		final MouseListener listMouseListener = new MouseListener() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-
-				final JList<String> sender = (JList<String>) e.getSource();
-				final int index = sender.locationToIndex(e.getPoint());
-
-				ArrayList<User> users = null;
-				if (sender.equals(onlineList)) {
-
-					users = onlines;
-				} else {
-
-					users = offlines;
-				}
-
-				if (0 <= index && index < users.size()) {
-
-					final User user = users.get(index);
-
-					if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) { // right clicked
-
-						// TODO: Show information
-					} else if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // left double-clicked
-
-						if (sender.equals(onlineList)) {
-
-							// TODO: Ask chat
-
-						}
-					}
-				}
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-			}
-		};
-
 		// onlineList
+		onlines = new ArrayList<>();
 		onlineModel = new DefaultListModel<String>();
 		onlineList = new JList<String>(onlineModel);
 		onlineList.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5), BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1)));
 		onlineList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		onlineList.addMouseListener(listMouseListener);
 		centerContainer.add(onlineList);
 
 		// offlineList
+		offlines = new ArrayList<>();
 		offlineModel = new DefaultListModel<String>();
 		offlineList = new JList<String>(offlineModel);
 		offlineList.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 5, 5, 5), BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1)));
@@ -199,7 +121,77 @@ public final class MainWindow extends WindowBase {
 		//
 		// Set values
 		//
-		updateFriendList();
+		new RequestBase(ERequest.WHOAMI, new String[0]) {
+
+			@Override
+			protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+
+				switch (response) {
+
+				case WHO_AM_I_OK:
+					String jsonStr = "";
+					while (jsonStr.length() == 0) {
+						
+						jsonStr = reader.nextLine();
+					}
+
+					User me = User.parseJsonOrNull(jsonStr);
+					if (me != null) {
+
+						Client.Me = me;
+						meLabel.setText(me.name);
+					}
+					break;
+
+				case WHO_AM_I_NO:
+					System.out.println("Unknown Error: Please try again.");
+					System.exit(0);
+					break;
+				}
+			}
+		}.request();
+		
+		new RequestBase(ERequest.ASK_FRIEND, new String[0]) {
+
+			@Override
+			protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
+				
+				switch (response) {
+				
+				case ASK_FRIEND_OK:
+					while (true) {
+						
+						String json = "";
+						while (json.length() == 0) {
+							
+							json = reader.nextLine();
+						}
+						if (json.equals("end")) {
+							
+							break;
+						}
+						
+						boolean signedIn = Boolean.parseBoolean(reader.nextLine());
+						User user = User.parseJsonOrNull(json);
+						
+						Client.Friends.put(user.uid, user);
+						if (signedIn) {
+						
+							Client.FriendsIn.add(user.uid.trim());
+						}
+					}
+
+					updateFriendList();
+					break;
+					
+				case ASK_FRIEND_NO:
+				default:
+					JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
+					System.exit(0);
+					break;
+				}
+			}
+		}.request();
 	}
 
 	@Override
@@ -225,8 +217,13 @@ public final class MainWindow extends WindowBase {
 						case ADD_FRIEND_OK:
 							reader.nextLine();
 							friend = User.parseJsonOrNull(reader.nextLine());
+							boolean signedIn = Boolean.parseBoolean(reader.nextLine());
 
 							Client.Friends.put(friend.uid, friend);
+							if (signedIn) {
+								
+								Client.FriendsIn.add(friend.uid.trim());
+							}
 							updateFriendList();
 
 							friendTextField.setText("");
@@ -259,6 +256,62 @@ public final class MainWindow extends WindowBase {
 				}.request();
 			}
 		});
+		
+		final MouseListener listMouseListener = new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				final JList<String> sender = (JList<String>) e.getSource();
+				final int index = sender.locationToIndex(e.getPoint());
+
+				ArrayList<User> users = null;
+				if (sender.equals(onlineList)) {
+
+					users = onlines;
+				} else {
+
+					users = offlines;
+				}
+
+				if (0 <= index && index < users.size()) {
+
+					final User user = users.get(index);
+
+					if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) { // right clicked
+
+						// TODO: Show information
+						JOptionPane.showMessageDialog(null, "Show info: " + user.uid);
+					} else if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // left double-clicked
+
+						if (sender.equals(onlineList)) {
+
+							JOptionPane.showMessageDialog(null, "Ask chat: " + user.uid);
+							// TODO: Ask chat
+
+						}
+					}
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			}
+		};
+		onlineList.addMouseListener(listMouseListener);
+		offlineList.addMouseListener(listMouseListener);
 	}
 
 	@Override
@@ -287,9 +340,9 @@ public final class MainWindow extends WindowBase {
 
 	private void updateFriendList() {
 
-		onlineModel.clear();
-		offlineModel.clear();
-		
+		onlineModel.removeAllElements();
+		offlineModel.removeAllElements();
+				
 		onlines.clear();
 		offlines.clear();
 
@@ -301,14 +354,15 @@ public final class MainWindow extends WindowBase {
 			if (Client.FriendsIn.contains(uid)) {
 
 				onlines.add(user);
-
-				onlineModel.addElement(user.name + "(" + user.uid + ")");
+				onlineModel.addElement(user.name + " (" + user.uid + ")");
 			} else {
 
 				offlines.add(user);
-
-				offlineModel.addElement(user.name + "(" + user.uid + ")");
+				offlineModel.addElement(user.name + " (" + user.uid + ")");
 			}
 		}
+
+		onlineList.setModel(onlineModel);
+		offlineList.setModel(offlineModel);
 	}
 }
