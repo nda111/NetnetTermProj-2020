@@ -31,14 +31,14 @@ import interaction.response.WhoAmIResponse;
 
 public class Server {
 	
-	public static final HashMap<ERequest, IResponse> Responses = new HashMap<>(); // �쓳�떟 由ъ뒪
+	public static final HashMap<ERequest, IResponse> Responses = new HashMap<>(); // Response
 	
-	public static final HashMap<String, User> Users = new HashMap<>(); // �궗�슜�옄 由ъ뒪�듃
+	public static final HashMap<String, User> Users = new HashMap<>(); // User list
 	
-	public static final HashMap<String, PrintWriter> Announcers = new HashMap<>(); // 異쒕젰�뒪�듃由� 
+	public static final HashMap<String, PrintWriter> Announcers = new HashMap<>(); // outputStream 
 	
-	public static final HashMap<String, String> PendingChats = new HashMap<>();	// �닔�씫/嫄곗젅 ��湲� 以묒씤 梨꾪똿諛⑹쓽 �슂泥��옄-�닔�떊�옄 �뙇 
-	public static final HashMap<Integer, Room> ChatRooms = new HashMap<>(); // ���솕 以묒씤 梨꾪똿諛� 
+	public static final HashMap<String, String> PendingChats = new HashMap<>();	// Requester- To pair in chat rooms awaiting acceptance/refusal
+	public static final HashMap<Integer, Room> ChatRooms = new HashMap<>(); // chat room in consersaton
 	
 	public static ServerSocket server = null;
 	
@@ -49,7 +49,7 @@ public class Server {
 		
 		try {
 
-			// �룷�듃�꽆踰꾨�� 諛쏆븘�삩�떎
+			// get port number
 			String Port = null;
 			File file = new File("./server_info.txt");
 			Scanner scanner = new Scanner(file);
@@ -58,15 +58,16 @@ public class Server {
 			scanner.close();
 
 			server = new ServerSocket(port);
-			System.out.println("�꽌踰꾩�鍮꾩셿猷�");
+			System.out.println("Server is ready");
 
 			while (true) {
 
+				// Allow client to connect
 				Socket client = server.accept();
 				
-				ServerResponser handler = new ServerResponser(client); // �뒪�젅�뱶 �깮�꽦
+				ServerResponser handler = new ServerResponser(client); // make thread
 				Thread thread = new Thread(handler);
-				thread.start(); // �뒪�젅�뱶 �떆�옉
+				thread.start(); // start thread
 			} // while
 		} catch (IOException e) {
 
@@ -129,7 +130,7 @@ public class Server {
 					reader.close();
 					
 					User user = User.parseJsonOrNull(json.toString()); // Then try parse as a JSON object
-					if (user == null) { // If falied to parse,
+					if (user == null) { // If failed to parse,
 						
 						throw new Exception("Failed to load user"); // Throw an exception.
 					} else { // Otherwise,

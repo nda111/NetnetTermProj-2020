@@ -29,7 +29,7 @@ public final class SignUpResponse implements IResponse {
 			user.tryWriteFile();
 			
 			response = EResponse.SIGNUP_OK;
-		} else { 
+		} else { // Fail (UID duplication)
 			
 			System.out.println("UID duplication error");
 			response = EResponse.SIGNUP_ERR;

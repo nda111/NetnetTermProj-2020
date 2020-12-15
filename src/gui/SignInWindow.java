@@ -84,7 +84,7 @@ public final class SignInWindow extends WindowBase {
 
 	@Override
 	public void setGuiEvents() {
-	
+		// If sign-up burron is clicked, go to sign-up window
 		signUpButton.addActionListener(new ActionListener() { 
 			
 			public void actionPerformed(ActionEvent e){
@@ -94,6 +94,7 @@ public final class SignInWindow extends WindowBase {
 			}
 		});
 		
+		//If sign-in button is clicked, 
 		signInButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -102,47 +103,47 @@ public final class SignInWindow extends WindowBase {
 				String uid = uidTextField.getText().trim();
 				String pw = new String(pwTextField.getPassword()).trim();
 				if (uid.length() == 0) {
-					
+					// If user name field is empty, and error message will display telling which part is missing
 					JOptionPane.showMessageDialog(null, "Please enter the user name.");
 					uidTextField.grabFocus();
 				} else if (pw.length() == 0) {
-
+					//If password field is empty, an error message will display telling which part is missing
 					JOptionPane.showMessageDialog(null, "Please enter the password.");
 					pwTextField.grabFocus();
 				} else {
-
+					// When filled both fields well,
 					new RequestBase(ERequest.SIGNIN, new String[] { uid, pw }) {
-
+						//Send a request to sign-in response and wait for a response
 						@Override
 						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
 							
 							switch (response) {
 							
-							case SIGNIN_OK:
+							case SIGNIN_OK: // Sucess log-in
 								System.out.println("Signed In: " + uid);
 								
 								MainWindow mainWindow = new MainWindow();
 								switchWindow(mainWindow, true);
 								break;
 								
-							case SIGNIN_ERR_NO_UID:
+							case SIGNIN_ERR_NO_UID: // Fail log-in (Non-existent account)
 								JOptionPane.showMessageDialog(null, "This user name is not registered.");
 								pwTextField.setText("");
 								uidTextField.selectAll();
 								uidTextField.grabFocus();
 								break;
 								
-							case SIGNIN_ERR_PW:
+							case SIGNIN_ERR_PW: // Fail log-in (Wrong password)
 								JOptionPane.showMessageDialog(null, "You've entered a wrong password.");
 								pwTextField.selectAll();
 								pwTextField.grabFocus();
 								break;
 								
-							case SIGNIN_ERR_MULTI:
+							case SIGNIN_ERR_MULTI: // Fail log-in (Log-in multiple devices)
 								JOptionPane.showMessageDialog(null, "You signed in on other device.\nIf it's not you, please contact us.");
 								break;
 								
-							default:
+							default: // Fail log-in
 								JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
 								break;
 							}

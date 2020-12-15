@@ -21,14 +21,14 @@ public final class WhoAmIResponse implements IResponse {
 			writer.println(user.toJson().toJSONString());
 
 			writer.flush();
-			return EResponse.WHO_AM_I_OK;
+			return EResponse.WHO_AM_I_OK; // Success to get User's name
 
 		} else {
 			
 			writer.println(EResponse.WHO_AM_I_NO.getValue());
 			writer.flush();
 
-			return EResponse.WHO_AM_I_NO;
+			return EResponse.WHO_AM_I_NO; // Fail to get User's name
 		}
 	}
 
