@@ -22,6 +22,6 @@ public final class QuitResponse implements IResponse {
 		writer.println(EResponse.QUIT_OK.getValue());
 		writer.flush();
 		
-		return EResponse.QUIT_OK;
+		return EResponse.QUIT_OK; // Terminate the program successfully
 	}
 }

@@ -21,19 +21,19 @@ public final class AddFriendResponse implements IResponse {
 		
 		User me = responser.getMeOrNull();
 		EResponse response = null;
-		if (me == null) {
+		if (me == null) {//Fail
 			
-			response = EResponse.ADD_FRIEND_ERR;
-		} else if (me.uid.equals(friendUid)) {
+			response = EResponse.ADD_FRIEND_ERR; 
+		} else if (me.uid.equals(friendUid)) { // Failed(Add yourself as a friend)
 			
-			response = EResponse.ADD_FRIEND_ERR_YOU;
-		} else if (!Server.Users.containsKey(friendUid)) {
+			response = EResponse.ADD_FRIEND_ERR_YOU; 
+		} else if (!Server.Users.containsKey(friendUid)) { // Failed(non-exist user)
 			
-			response = EResponse.ADD_FRIEND_ERR_UID;
-		} else if (me.friends.contains(friendUid)) {
+			response = EResponse.ADD_FRIEND_ERR_UID; 
+		} else if (me.friends.contains(friendUid)) { // Failed(Already friend)
 			
 			response = EResponse.ADD_FRIEND_ERR_ALREADY;
-		} else {
+		} else { // Successfully add friends
 			
 			response = EResponse.ADD_FRIEND_OK;
 			
@@ -53,8 +53,8 @@ public final class AddFriendResponse implements IResponse {
 		
 		writer.println(response.getValue());
 		
-		if (response == EResponse.ADD_FRIEND_OK) {
-			
+		if (response == EResponse.ADD_FRIEND_OK) { // When successfully adding friend
+			// In the friend list of both users, enter the name of the relative user
 			User fObj = Server.Users.get(friendUid);
 			JSONObject friend = fObj.toJson();
 			friend.put("password", null);

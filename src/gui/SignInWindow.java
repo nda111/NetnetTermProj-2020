@@ -48,26 +48,36 @@ public final class SignInWindow extends WindowBase {
 	@Override
 	public void initializeGuiComponents(JPanel root) {
 		
+		//
+		// ID textField
+		// password textField
+		// sign-up botton
+		// sign-un button
+		//
 		GridLayout layout = new GridLayout(0, 2);
 		layout.setVgap(5);
 		root.setLayout(layout);
 		root.setBorder(BorderFactory.createEmptyBorder(80, 20, 370, 20));
 
+		// Enter ID
 		uidLabel = new JLabel("User", SwingConstants.RIGHT);
 		root.add(uidLabel);
 
 		uidTextField = new JTextField(20);
 		root.add(uidTextField);
 
+		// Enter password
 		pwLabel = new JLabel("Password", SwingConstants.RIGHT);
 		root.add(pwLabel);
 
 		pwTextField = new JPasswordField(20);
 		root.add(pwTextField);
 
+		// Sign-up button
 		signUpButton = new JButton("Sign Up");
 		root.add(signUpButton);
 
+		// Sign-in button
 		signInButton = new JButton("Sign In");
 		root.add(signInButton);
 	}

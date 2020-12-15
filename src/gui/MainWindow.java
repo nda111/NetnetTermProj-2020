@@ -158,6 +158,7 @@ public final class MainWindow extends WindowBase {
 		//
 		// Set values
 		//
+		// Send a request to WhoAmI response and wait for a response
 		new RequestBase(ERequest.WHOAMI, new String[0]) {
 
 			@Override
@@ -165,7 +166,7 @@ public final class MainWindow extends WindowBase {
 
 				switch (response) {
 
-				case WHO_AM_I_OK:
+				case WHO_AM_I_OK: // Sucess to get user name
 					String jsonStr = "";
 					while (jsonStr.length() == 0) {
 						
@@ -180,7 +181,7 @@ public final class MainWindow extends WindowBase {
 					}
 					break;
 
-				case WHO_AM_I_NO:
+				case WHO_AM_I_NO: // Fail to get user name
 					System.out.println("Unknown Error: Please try again.");
 					System.exit(0);
 					break;
@@ -188,6 +189,7 @@ public final class MainWindow extends WindowBase {
 			}
 		}.request();
 		
+		// Send a request to AskFriend response and wait for a response
 		new RequestBase(ERequest.ASK_FRIEND, new String[0]) {
 
 			@Override
@@ -195,9 +197,10 @@ public final class MainWindow extends WindowBase {
 				
 				switch (response) {
 				
-				case ASK_FRIEND_OK:
+				case ASK_FRIEND_OK: // Friend existence
 					while (true) {
 						
+						// Get the friends list
 						String json = "";
 						while (json.length() == 0) {
 							
@@ -221,7 +224,7 @@ public final class MainWindow extends WindowBase {
 					updateFriendList();
 					break;
 					
-				case ASK_FRIEND_NO:
+				case ASK_FRIEND_NO: // No friends
 				default:
 					JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
 					System.exit(0);
@@ -244,6 +247,7 @@ public final class MainWindow extends WindowBase {
 				final String uid = friendTextField.getText().trim();
 				final String friendUid = friendTextField.getText().trim();
 
+				// Send a request to AddFriend response and wait for a response
 				new RequestBase(ERequest.ADD_FRIEND, new String[] { friendUid }) {
 
 					@Override
@@ -251,7 +255,7 @@ public final class MainWindow extends WindowBase {
 
 						switch (response) {
 
-						case ADD_FRIEND_OK:
+						case ADD_FRIEND_OK: // Success to add friend
 							reader.nextLine();
 							friend = User.parseJsonOrNull(reader.nextLine());
 							boolean signedIn = Boolean.parseBoolean(reader.nextLine());
@@ -266,25 +270,25 @@ public final class MainWindow extends WindowBase {
 							friendTextField.setText("");
 							break;
 
-						case ADD_FRIEND_ERR_YOU:
+						case ADD_FRIEND_ERR_YOU: // Failed(Add yourself as a friend)
 							JOptionPane.showMessageDialog(null, "It's you idiot.");
 							friendTextField.selectAll();
 							friendTextField.grabFocus();
 							break;
 
-						case ADD_FRIEND_ERR_UID:
+						case ADD_FRIEND_ERR_UID: // Failed(non-exist user)
 							JOptionPane.showMessageDialog(null, "There's no such user: " + friendUid + ".");
 							friendTextField.selectAll();
 							friendTextField.grabFocus();
 							break;
 
-						case ADD_FRIEND_ERR_ALREADY:
+						case ADD_FRIEND_ERR_ALREADY: // Failed(Already friend)
 							JOptionPane.showMessageDialog(null, "You're already a friend of " + friendUid + ".");
 							friendTextField.selectAll();
 							friendTextField.grabFocus();
 							break;
 
-						case ADD_FRIEND_ERR:
+						case ADD_FRIEND_ERR: // Fail
 						default:
 							JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
 							break;
