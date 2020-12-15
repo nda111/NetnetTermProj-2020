@@ -20,10 +20,10 @@ public final class ValidateUidResponse implements IResponse {
 
 		if (Server.Users.containsKey(uid)) {
 			
-			response = EResponse.VALIDATE_UID_NO;
+			response = EResponse.VALIDATE_UID_NO; // Fail (UID duplication)
 		} else {
 			
-			response = EResponse.VALIDATE_UID_OK;
+			response = EResponse.VALIDATE_UID_OK; // Sucess (unique UID)
 		}
 		
 		writer.println(response.getValue());

@@ -4,6 +4,7 @@ public final class Room {
 
 	public String uid1, uid2;
 	
+	// Two users can chat in the chat room
 	public Room(String uid1, String uid2) {
 		
 		this.uid1 = uid1;

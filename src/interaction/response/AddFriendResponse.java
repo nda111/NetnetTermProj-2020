@@ -22,6 +22,7 @@ public final class AddFriendResponse implements IResponse {
 		
 		User me = responser.getMeOrNull();
 		EResponse response = null;
+
 		if (me == null) {//if there is no one added in friends list
 			
 			response = EResponse.ADD_FRIEND_ERR; //error
@@ -35,6 +36,7 @@ public final class AddFriendResponse implements IResponse {
 			
 			response = EResponse.ADD_FRIEND_ERR_ALREADY;//friends already in
 		} else { //in other cases,
+
 			
 			response = EResponse.ADD_FRIEND_OK;//success in adding friend
 			
@@ -53,9 +55,11 @@ public final class AddFriendResponse implements IResponse {
 		}
 		
 		writer.println(response.getValue());
+
 		//In case if success in adding friends
 		if (response == EResponse.ADD_FRIEND_OK) {
 			
+
 			User fObj = Server.Users.get(friendUid);
 			JSONObject friend = fObj.toJson();
 			friend.put("password", null);

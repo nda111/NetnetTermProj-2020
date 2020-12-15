@@ -26,7 +26,7 @@ public final class SignInResponse implements IResponse{
 		} else if (!user.matchPassword(password)) { // Wrong password
 			
 			response = EResponse.SIGNIN_ERR_PW;
-		} else if (user.isSignedIn()){ 				// Multi-Signin attemption
+		} else if (user.isSignedIn()){ 				// Multi-Sign-in attemption
 			
 			response = EResponse.SIGNIN_ERR_MULTI;
 		} else { 									// Success

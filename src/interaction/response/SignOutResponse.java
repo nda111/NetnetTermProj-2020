@@ -18,6 +18,7 @@ public final class SignOutResponse implements IResponse{
 		
 		User me = responser.getMeOrNull();
 		
+
 		if (me == null) { // when error occurs
 
 			response = EResponse.SIGNOUT_ERR_NOT_IN;
@@ -25,6 +26,7 @@ public final class SignOutResponse implements IResponse{
 
 			response = EResponse.SIGNOUT_ERR;
 		} else { // success
+
 			
 			response = EResponse.SIGNOUT_OK;
 			
