@@ -17,8 +17,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
@@ -37,11 +39,17 @@ public final class MainWindow extends WindowBase {
 	private JList<String> onlineList;
 	private JList<String> offlineList;
 	private JLabel weatherLabel;
+	
+	private JPopupMenu contextMenu;
+	private JMenuItem askChatItem;
+	private JMenuItem showInfoItem;
 
 	private ArrayList<User> onlines;
 	private ArrayList<User> offlines;
 	private DefaultListModel<String> onlineModel;
 	private DefaultListModel<String> offlineModel;
+	
+	private User selectedFriend = null;
   
 	@Override
 	public void configureWindow() {
@@ -114,6 +122,25 @@ public final class MainWindow extends WindowBase {
 
 		root.add(topContainer, BorderLayout.NORTH);
 		root.add(centerContainer, BorderLayout.CENTER);
+
+		Weather weather = new Weather(62, 124, "JSON", System.currentTimeMillis());
+		weatherLabel = new JLabel("Weather here");
+		weatherLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+		weatherLabel.setText(weather.getDataAsHtml(1, 10));
+		root.add(weatherLabel, BorderLayout.SOUTH);
+		
+		//
+		// Context menu
+		//
+		contextMenu = new JPopupMenu();
+		askChatItem = new JMenuItem("Ask Chat");
+		showInfoItem = new JMenuItem("Show informations");
+		
+		contextMenu.add(askChatItem);
+		contextMenu.add(showInfoItem);
+
+		onlineList.setComponentPopupMenu(contextMenu);
+		offlineList.setComponentPopupMenu(contextMenu);
 
 		//
 		// Set values
@@ -189,12 +216,6 @@ public final class MainWindow extends WindowBase {
 				}
 			}
 		}.request();
-
-		Weather weather = new Weather(62, 124, "JSON", System.currentTimeMillis());
-		weatherLabel = new JLabel("Weather here");
-		weatherLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
-		weatherLabel.setText(weather.getDataAsHtml(1, 10));
-		root.add(weatherLabel, BorderLayout.SOUTH);
 	}
 
 	@Override
@@ -272,29 +293,27 @@ public final class MainWindow extends WindowBase {
 				if (sender.equals(onlineList)) {
 
 					users = onlines;
+					offlineList.clearSelection();
 				} else {
 
 					users = offlines;
+					onlineList.clearSelection();
 				}
 
 				if (0 <= index && index < users.size()) {
 
 					final User user = users.get(index);
 
-					if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) { // right clicked
-
-						// TODO: Show information
-						JOptionPane.showMessageDialog(null, "Show info: " + user.uid);
-					} else if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) { // left double-clicked
-
-						if (sender.equals(onlineList)) {
-
-							askChat(user.uid);
-						} else {
-
-							JOptionPane.showMessageDialog(null, "You can't chat with someone who's in offline.");
-						}
-					}
+					selectedFriend = user;
+					
+					askChatItem.setEnabled(sender.equals(onlineList));
+					showInfoItem.setEnabled(true);
+				} else {
+					
+					selectedFriend = null;
+					
+					askChatItem.setEnabled(false);
+					showInfoItem.setEnabled(false);
 				}
 			}
 
@@ -316,6 +335,31 @@ public final class MainWindow extends WindowBase {
 		};
 		onlineList.addMouseListener(listMouseListener);
 		offlineList.addMouseListener(listMouseListener);
+		
+		askChatItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if (selectedFriend != null) {
+					
+					askChat(selectedFriend.uid);
+				}
+			}
+		});
+		
+		showInfoItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if (selectedFriend != null) {
+					
+					// TODO: Show info
+					JOptionPane.showMessageDialog(MainWindow.this, "Show Info: " + selectedFriend.name + " (" + selectedFriend.uid + ")");
+				}
+			}
+		});
 	}
 
 	@Override
