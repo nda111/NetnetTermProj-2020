@@ -18,6 +18,11 @@ import app.Server;
 
 public final class User {
 	
+	public interface ValueChangeListener {
+		
+		void valueChanged(String name, String message);
+	}
+	
 	public static final String UsersPath = "./users/";
 	
 	public static User parseJsonOrNull(String jsonString) {
@@ -106,9 +111,11 @@ public final class User {
 	public String name = null;
 	public long birth = -1;
 	public SocketAddress userAddress = null;
-	public String personalMessage = null;
+	public String personalMessage = "";
 	public long signOutTime = -1;
 	public HashSet<String> friends = null;
+	
+	public ValueChangeListener valueChangeListener = null;
 	
 	public User(String uid, String email, String password, String name, long birth, String personalMessage, HashSet<String> friends) {
 		
@@ -123,7 +130,7 @@ public final class User {
 	
 	public User(String uid, String email, String password, String name, long birth) {
 		
-		this(uid, email, hashPassword(password), name, birth, null, new HashSet<>());
+		this(uid, email, hashPassword(password), name, birth, "", new HashSet<>());
 	}
 	
 	public boolean isSignedIn() {
@@ -217,6 +224,17 @@ public final class User {
 			
 			e.printStackTrace();
 			return false;
+		}
+	}
+	
+	public void updateValue(String name, String message) {
+		
+		this.name = name;
+		this.personalMessage = message;
+		
+		if (this.valueChangeListener != null) {
+			
+			this.valueChangeListener.valueChanged(name, message);
 		}
 	}
 }
