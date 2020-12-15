@@ -15,6 +15,7 @@ public final class WhoAmIResponse implements IResponse {
 
 		User user = responser.getMeOrNull();
 
+		//if there is user, put values to  the user information and 
 		if (user != null) {
 
 			writer.println(EResponse.WHO_AM_I_OK.getValue());
@@ -23,7 +24,7 @@ public final class WhoAmIResponse implements IResponse {
 			writer.flush();
 			return EResponse.WHO_AM_I_OK;
 
-		} else {
+		} else {//if not, falied to put the user information
 			
 			writer.println(EResponse.WHO_AM_I_NO.getValue());
 			writer.flush();

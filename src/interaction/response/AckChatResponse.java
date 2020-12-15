@@ -17,17 +17,19 @@ public final class AckChatResponse implements IResponse{
 
 		EResponse response = EResponse.ACK_CHAT_LATE;
 		
-		final String askerUid = params[0].trim();
-		final String bAcceptStr = params[1].trim();
-		final boolean bAccept = Boolean.parseBoolean(bAcceptStr);
+		final String askerUid = params[0].trim(); //chat reqeustor (asker)userid
+		final String bAcceptStr = params[1].trim(); //sent string from asker
+		final boolean bAccept = Boolean.parseBoolean(bAcceptStr); //whether message is sent or not 
 		
 		final User me = responser.getMeOrNull();
 		final Room room = new Room(askerUid, me.uid);
 		
+		//If the chat asker ID is your own ID or an empty value,
 		if (me != null && Server.PendingChats.getOrDefault(askerUid, null).equals(me.uid)) {
 			
-			Server.PendingChats.remove(askerUid);
+			Server.PendingChats.remove(askerUid); //remove from the list where requestor-receiver pair for chat rooms awaiting acceptance/rejection
 		
+			
 			final PrintWriter fWriter = Server.Announcers.getOrDefault(askerUid, null);
 			if (fWriter != null) {
 				
@@ -39,7 +41,7 @@ public final class AckChatResponse implements IResponse{
 				
 				fWriter.println(bAcceptStr);
 				if (bAccept) {
-					
+					//
 					Server.ChatRooms.put(room.hashCode(), room);
 					fWriter.println(room.hashCode());
 				} else {
@@ -53,9 +55,11 @@ public final class AckChatResponse implements IResponse{
 		} 
 		
 		writer.println(response.getValue());
+		
+		//if message sent boolean value is same as same as chat accepted message
 		if (bAccept && response == EResponse.ACK_CHAT_OK) {
 			
-			writer.println(room.hashCode());
+			writer.println(room.hashCode()); //send room hashcode
 		}
 		
 		writer.flush();

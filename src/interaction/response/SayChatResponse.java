@@ -24,9 +24,9 @@ public final class SayChatResponse implements IResponse {
 		final long now = Long.parseLong(params[1]);
 		final String text = params[2];
 		
-		final User me = responser.getMeOrNull();
-		final Room room = Server.ChatRooms.getOrDefault(roomId, null);
-		if (room != null) {
+		final User me = responser.getMeOrNull(); //보낸 사람이 누군지 
+		final Room room = Server.ChatRooms.getOrDefault(roomId, null); 
+		if (room != null) { //비정상적인 접근 
 			
 			if (me != null && room.isIn(me.uid)) {
 			

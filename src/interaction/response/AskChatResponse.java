@@ -20,7 +20,7 @@ public final class AskChatResponse implements IResponse {
 		
 		if (me != null) {
 			
-			final String fUid = params[0];
+			final String fUid = params[0];//누구랑 대화하고 싶은지 
 			final PrintWriter fWriter = Server.Announcers.getOrDefault(fUid, null);
 			if (fWriter != null) {
 				
@@ -34,7 +34,7 @@ public final class AskChatResponse implements IResponse {
 				fWriter.println(me.name);
 				fWriter.flush();
 				
-				Server.PendingChats.put(me.uid, fUid);
+				Server.PendingChats.put(me.uid, fUid);//요청한 사람 uid, 받는사람 uid 
 				response = EResponse.ASK_CHAT_OK;
 			} else {
 				

@@ -16,6 +16,7 @@ public class AskFriendResponse implements IResponse {
 
 		User user = responser.getMeOrNull();
 		
+		//if there is user get user ask whether to put as friend
 		if (user != null) {
 		
 			writer.println(EResponse.ASK_FRIEND_OK.getValue());
@@ -33,7 +34,7 @@ public class AskFriendResponse implements IResponse {
 			writer.flush();
 			
 			return EResponse.ASK_FRIEND_OK;
-		} else {
+		} else { //if no user, failed to ask for friend
 			
 			writer.println(EResponse.ASK_FRIEND_NO.getValue());
 			writer.flush();

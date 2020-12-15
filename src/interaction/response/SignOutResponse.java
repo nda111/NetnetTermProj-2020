@@ -18,13 +18,13 @@ public final class SignOutResponse implements IResponse{
 		
 		User me = responser.getMeOrNull();
 		
-		if (me == null) { // 그냥 에러 
+		if (me == null) { // when error occurs
 
 			response = EResponse.SIGNOUT_ERR_NOT_IN;
-		} else if (!me.isSignedIn()) { // 로그인 한 적 없음 
+		} else if (!me.isSignedIn()) { // no tries in login
 
 			response = EResponse.SIGNOUT_ERR;
-		} else { // 성공
+		} else { // success
 			
 			response = EResponse.SIGNOUT_OK;
 			
