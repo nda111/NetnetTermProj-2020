@@ -2,25 +2,25 @@ package data;
 
 public enum ERequest {
 	
-	ANNOUNCE((byte)0), // 서버->클라이언트 (서버가 수신할 일 없음)
-	ECHO((byte)1), // 에코 요청
-	QUIT((byte)2), // 종료 선언  
-	VALIDATE_UID((byte)3), // UID 중복 검사
-	SIGNUP((byte)4), // 회원가입 요청 
-	SIGNIN((byte)5), // 로그인 요청 
-	SIGNOUT((byte)6), // 로그아웃 요청
-	ASK_UID((byte)7), // 아이디 찾기 
-	ASK_FRIEND((byte)8), // 친구 목록 요청 
-	ADD_FRIEND((byte)9), // 친구 추가 
-	ASK_CHAT((byte)10), // 대화 요청 
-	ACK_CHAT((byte)11), // 대화 수락/거절
-	SAY_CHAT((byte)12), // 대화 발화 
-	END_CHAT((byte)13), // 대화 종료 
-	WHOAMI((byte)14); //내정보
+	ANNOUNCE((byte)0), // server->client(server does not receive anything)
+	ECHO((byte)1), // Request echo
+	QUIT((byte)2), // Announce termination
+	VALIDATE_UID((byte)3), // UID duplicate check
+	SIGNUP((byte)4), // Request sign-up
+	SIGNIN((byte)5), // Request sign-in
+	SIGNOUT((byte)6), // Request sign-out
+	ASK_UID((byte)7), // Find ID
+	ASK_FRIEND((byte)8), // Request friend list
+	ADD_FRIEND((byte)9), // Add friend
+	ASK_CHAT((byte)10), // Request chat
+	ACK_CHAT((byte)11), // Accept/reject conversation
+	SAY_CHAT((byte)12), // Conversation ignition
+	END_CHAT((byte)13), // End conversation
+	WHOAMI((byte)14); // Internal information
 
-	// 파라미터로 들어온 값에 해당하는 ERequest 객체를 반환한다.
-	// 알 수 없는 요청이면 null을 반환한다.
-	// ex) value == 0 -> return ECHO
+	// Returns the ERequest object corresponding to the value entered into the parameter
+	// Entered into the parameter
+	// EX) value == 0 -> return ECHO
 	public static ERequest valueOf(byte value) {
 		
 		for (ERequest v : ERequest.values()) {
@@ -34,15 +34,15 @@ public enum ERequest {
 		return null;
 	}
 	
-	private byte value = -1; // 요청의 식별
+	private byte value = -1; // Identification of request
 	
-	// 생성
+	// Generating
 	private ERequest(byte value) {
 		
 		this.value = value;
 	}
 	
-	// 이 요청의 식별자를 가져온다.
+	// Gets the identifier of this request
 	public byte getValue() {
 		
 		return value;

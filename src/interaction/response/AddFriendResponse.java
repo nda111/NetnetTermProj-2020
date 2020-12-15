@@ -16,7 +16,7 @@ public final class AddFriendResponse implements IResponse {
 
 	@Override
 	public EResponse response(String[] params, ServerResponser responser, Scanner reader, PrintWriter writer) {
-	
+
 		String friendUid = params[0];
 		
 		User me = responser.getMeOrNull();

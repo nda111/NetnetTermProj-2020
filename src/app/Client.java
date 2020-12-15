@@ -12,11 +12,13 @@ import gui.SignInWindow;
 import interaction.RequestBase;
 
 public class Client {
-	
+	// Save the user's list of friend
 	public static final HashMap<String, User> Friends = new HashMap<>();
 	
+	// Save friends who are online
 	public static final HashSet<String> FriendsIn = new HashSet<>();
 	
+	// User's name
 	public static User Me = null;
 	
 	public static void main(String[] args) {
@@ -29,10 +31,11 @@ public class Client {
 		int port = -1;
 
 		try {
-
+			// Get server's information from external file
 			File file = new File("./server_info.txt");			
 			Scanner scanner = new Scanner(file);
 
+			// Read host and port number from file
 			host = scanner.nextLine();
 			port = Integer.parseInt(scanner.nextLine());
 			scanner.close();
@@ -46,6 +49,7 @@ public class Client {
 			System.exit(0);
 		}
 		
+		// Display signInWindow
 		SignInWindow window = new SignInWindow(socket);
 		window.setVisible(true);
 	}

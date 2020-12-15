@@ -118,6 +118,7 @@ public final class MainWindow extends WindowBase {
 		//
 		// Set values
 		//
+		// Send a request to WhoAmI response and wait for a response.
 		new RequestBase(ERequest.WHOAMI, new String[0]) {
 
 			@Override
@@ -125,7 +126,7 @@ public final class MainWindow extends WindowBase {
 
 				switch (response) {
 
-				case WHO_AM_I_OK:
+				case WHO_AM_I_OK: // Success to get user name
 					String jsonStr = "";
 					while (jsonStr.length() == 0) {
 						
@@ -140,7 +141,7 @@ public final class MainWindow extends WindowBase {
 					}
 					break;
 
-				case WHO_AM_I_NO:
+				case WHO_AM_I_NO: // Fail to get user name
 					System.out.println("Unknown Error: Please try again.");
 					System.exit(0);
 					break;
@@ -148,6 +149,7 @@ public final class MainWindow extends WindowBase {
 			}
 		}.request();
 		
+		// Send a request to AskFriend response and wait for a response.
 		new RequestBase(ERequest.ASK_FRIEND, new String[0]) {
 
 			@Override
@@ -155,7 +157,7 @@ public final class MainWindow extends WindowBase {
 				
 				switch (response) {
 				
-				case ASK_FRIEND_OK:
+				case ASK_FRIEND_OK: // Friend existence
 					while (true) {
 						
 						String json = "";

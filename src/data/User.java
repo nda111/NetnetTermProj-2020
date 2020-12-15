@@ -63,16 +63,19 @@ public final class User {
 		}
 	}
 	
+	// Set up a location to store user information
 	public static String buildFilePath(String uid) {
 		
 		return UsersPath + uid + ".json";
 	}
 	
+	// Check if Uid is available
 	public static boolean isUidAvailable(String uid) {
 		
 		return !Server.Users.containsKey(uid);
 	}
 	
+	// Encrypts the password
 	private static String hashPassword(String password) {
 
 		try {
@@ -181,6 +184,7 @@ public final class User {
 		return json;
 	}
 	
+	// Store the user's information in a json file in the specified path.
 	public boolean tryWriteFile() {
 		
 		File dir = new File(User.UsersPath);

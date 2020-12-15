@@ -29,14 +29,14 @@ import interaction.response.WhoAmIResponse;
 
 public class Server {
 	
-	public static final HashMap<ERequest, IResponse> Responses = new HashMap<>(); // 응답 리스
+	public static final HashMap<ERequest, IResponse> Responses = new HashMap<>(); // response 
 	
-	public static final HashMap<String, User> Users = new HashMap<>(); // 사용자 리스트
+	public static final HashMap<String, User> Users = new HashMap<>(); // User list
 	
-	public static final HashMap<String, PrintWriter> Announcers = new HashMap<>(); // 출력스트림 
+	public static final HashMap<String, PrintWriter> Announcers = new HashMap<>(); // OutputStream
 	
-	public static final HashMap<String, String> PendingChats = new HashMap<>();	// 수락/거절 대기 중인 채팅방의 요청자-수신자 쌍 
-	public static final HashMap<Integer, Room> ChatRooms = new HashMap<>(); // 대화 중인 채팅방 
+	public static final HashMap<String, String> PendingChats = new HashMap<>();	// Requester-To pair in chat rooms awaiting acceptance/refusal 
+	public static final HashMap<Integer, Room> ChatRooms = new HashMap<>(); // chat room in conversation 
 	
 	public static ServerSocket server = null;
 	
@@ -47,7 +47,7 @@ public class Server {
 		
 		try {
 
-			// 포트넘버를 받아온다
+			// get Port number
 			String Port = null;
 			File file = new File("./server_info.txt");
 			Scanner scanner = new Scanner(file);
@@ -56,15 +56,16 @@ public class Server {
 			scanner.close();
 
 			server = new ServerSocket(port);
-			System.out.println("서버준비완료");
+			System.out.println("**Server is ready**");
 
 			while (true) {
 
+				// Allow client to connect
 				Socket client = server.accept();
 				
-				ServerResponser handler = new ServerResponser(client); // 스레드 생성
+				ServerResponser handler = new ServerResponser(client); // make thread
 				Thread thread = new Thread(handler);
-				thread.start(); // 스레드 시작
+				thread.start(); // start thread
 			} // while
 		} catch (IOException e) {
 

@@ -18,10 +18,10 @@ public final class ValidateUidResponse implements IResponse {
 		
 		final String uid = params[0];
 
-		if (Server.Users.containsKey(uid)) {
+		if (Server.Users.containsKey(uid)) {// Fail (UID duplication)
 			
 			response = EResponse.VALIDATE_UID_NO;
-		} else {
+		} else {							// Success (Unique UID)
 			
 			response = EResponse.VALIDATE_UID_OK;
 		}
