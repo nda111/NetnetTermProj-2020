@@ -43,8 +43,8 @@ public class Server {
 	public static ServerSocket server = null;
 	
 	public static void main(String[] args) {
-		
-		initResponse();
+		//start server
+		initResponse(); 
 		loadUserInfo();
 		
 		try {

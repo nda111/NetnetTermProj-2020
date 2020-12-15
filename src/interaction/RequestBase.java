@@ -12,8 +12,8 @@ import gui.WindowBase;
 
 public abstract class RequestBase {
 
-	private static HashMap<ERequest, RequestBase> Requests = new HashMap<>();
-	private static HashMap<ERequest, EResponse> Responses = new HashMap<>();
+	private static HashMap<ERequest, RequestBase> Requests = new HashMap<>();//save request, RequestBase in pair
+	private static HashMap<ERequest, EResponse> Responses = new HashMap<>();//save request,  EResponse in pair
 	
 	private static boolean once = true;
 	
@@ -39,11 +39,11 @@ public abstract class RequestBase {
 	private ERequest request;
 	private String[] params;
 
-	public RequestBase(ERequest request, String[] params) {
+	public RequestBase(ERequest request, String[] params) { 
 		
 		this.request = request;
 		this.params = params;
-		
+		//when RequestBase recalls, it is once recalled
 		if (once) {
 			
 			once = false;
@@ -80,17 +80,17 @@ public abstract class RequestBase {
 								
 								announceParams[i] = reader.nextLine();
 							}
-							
+							//Hand over to the handleAnnounciation method to the window that is now open
 							if (WindowBase.CurrentWindow != null) {
 								
 								WindowBase.CurrentWindow.handleAnnouncement(response, announceParams);
 								
 								Responses.put(request, response);
 							}
-						} else if (Requests.containsKey(request)) {
+						} else if (Requests.containsKey(request)) { //if once used, 
 	
 							Requests.get(request).handle(response, reader, writer);
-							Requests.remove(response.getRequest());
+							Requests.remove(response.getRequest());//remove so that request can go inside again 
 							
 							Responses.put(request, response);
 						} else {
@@ -109,13 +109,13 @@ public abstract class RequestBase {
 
 			Requests.put(request, this);
 		}
-		
+		//send request code
 		writer.print(request.getValue());
 		writer.print(' ');
-		
+		//send send parameter length
 		writer.print(params.length);
 		writer.print(' ');
-		
+		//send paramter one by one
 		for (String param : params) {
 			
 			writer.println(param);

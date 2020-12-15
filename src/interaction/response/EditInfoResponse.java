@@ -12,7 +12,7 @@ import app.ServerResponser;
 import data.EResponse;
 import data.User;
 import interaction.IResponse;
-
+//for editting information of user name, message
 public class EditInfoResponse implements IResponse {
 
 	@Override

@@ -70,19 +70,19 @@ public abstract class WindowBase extends JFrame {
 	        }
 		});
 		
-		configureWindow();
-		initializeGuiComponents((JPanel)this.getContentPane());
-		setGuiEvents();
+		configureWindow(); //set Window size
+		initializeGuiComponents((JPanel)this.getContentPane()); //Add gui component to window 
+		setGuiEvents(); //make events for gui component
 		
-		if (announceListener == null) {
+		if (announceListener == null) { 
 		
 			new Thread(new Runnable() {
 				
 				@Override
 				public void run() {
 
-					announceListener = new RequestBase(ERequest.ANNOUNCE, new String[0]) {
-
+					announceListener = new RequestBase(ERequest.ANNOUNCE, new String[0]) { 
+						//if window is first made, do ANNOUNCE request
 						@Override
 						protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
 							
@@ -94,7 +94,7 @@ public abstract class WindowBase extends JFrame {
 							}
 			
 							CurrentWindow.handleAnnouncement(response, params);
-							
+							//if request over, do request again
 							this.request();
 						}
 					};
@@ -123,29 +123,32 @@ public abstract class WindowBase extends JFrame {
 		return parent == null;
 	}
 	
+	
 	public void switchWindow(WindowBase win, boolean newRoot) {
 		
 		win.socket = this.socket;
 		win.reader = this.reader;
 		win.writer = this.writer;
 		
-		matchCenter(win);
+		matchCenter(win); //Adjust window coordinates
 
-		win.setVisible(true);
-		setVisible(false);
+		win.setVisible(true);//Make the new window visible
+		setVisible(false); //Make the existing window visible
 		
+		//If new window starts
 		if (newRoot) {
 			
-			disposeAll();
+			disposeAll(); //dispose previous windows
 			win.parent = null;
 		} else {
 			
-			win.parent = this;
+			win.parent = this; 
 		}
 		
-		CurrentWindow = win;
+		CurrentWindow = win; //Make this window boot
 	}
 	
+	//Go back to parent go back to previous  window
 	public void backToParent() {
 		
 		if (parent != null) {
@@ -180,9 +183,10 @@ public abstract class WindowBase extends JFrame {
 		
 		if (b) {
 			
-			CurrentWindow = this;
+			CurrentWindow = this; //make available to recall HandleAnnounce
 		}
 	}
+	
 	
 	public void handleAnnouncement(EResponse response, String[] params) {
 		

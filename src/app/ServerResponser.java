@@ -51,7 +51,8 @@ public class ServerResponser implements Runnable {
 				
 				params[i] = reader.nextLine().trim();
 			}
-			
+			//ANNOUNCE is for 'server to client'
+			//During client-server request, when data is needed to be sent, use ANNOUNCE
 			if (request == ERequest.ANNOUNCE) {
 				
 				System.out.println("ANNOUNCE, " + client.getRemoteSocketAddress().toString());
@@ -85,26 +86,28 @@ public class ServerResponser implements Runnable {
 		}
 		
 		try {
-			
-			reader.close();
-			writer.close();
-			client.close();
+			//when client is over, close thread
+			reader.close(); 
+			writer.close(); 
+			client.close(); 
 		} catch (IOException e) {
 			
 			e.printStackTrace();
 		}
 	}
 	
+	//For checking whether client IP address is hacking or not
 	public SocketAddress getClientAddress() {
 		
 		return client.getRemoteSocketAddress();
 	}
 
+	//bring own information
 	public void setMe(User user) {
 	
 		this.me = user;
 	}
-	
+	//storing own information
 	public User getMeOrNull() {
 		
 		return this.me;

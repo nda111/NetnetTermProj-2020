@@ -10,6 +10,7 @@ import data.Room;
 import data.User;
 import interaction.IResponse;
 
+
 public final class AckChatResponse implements IResponse{
 
 	@Override
@@ -41,9 +42,9 @@ public final class AckChatResponse implements IResponse{
 				
 				fWriter.println(bAcceptStr);
 				if (bAccept) {
-					//
+					//Put a pair of chat rooms in the hashmap containing the room value that contains who is participating in the chat room (by int type).
 					Server.ChatRooms.put(room.hashCode(), room);
-					fWriter.println(room.hashCode());
+					fWriter.println(room.hashCode()); //send  id  in room to who requested
 				} else {
 					
 					fWriter.println(0);
@@ -54,6 +55,7 @@ public final class AckChatResponse implements IResponse{
 			}
 		} 
 		
+		//send  id  in room to whom requested
 		writer.println(response.getValue());
 		
 		//if message sent boolean value is same as same as chat accepted message

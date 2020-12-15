@@ -421,23 +421,27 @@ public final class MainWindow extends WindowBase {
 			updateFriendList();
 			break;
         
+			//when  ANNOUNCE_ASK_CHAT occurs
 		case ANNOUNCE_ASK_CHAT:
 			final String fUid = params[0].trim();
 			final String fName = params[1];
 			final Boolean bAccept = JOptionPane.showConfirmDialog(this, 
 					fName + " want's to talk to you.\nWill you accept?", "Chat", 
-					JOptionPane.YES_NO_OPTION) == 0;
+					JOptionPane.YES_NO_OPTION) == 0; //message box occurs whether approve or not
 
-			new RequestBase(ERequest.ACK_CHAT, new String[] { fUid, bAccept.toString() }) {
+			//response for ACK_CAHT
+			new RequestBase(ERequest.ACK_CHAT, new String[] { fUid, bAccept.toString() }) { //(message from whom, whether accept or not)
 
 				@Override
 				protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
 
 					switch (response) {
 					
+					//if online, and didn't go out from chatting room, ACK_CHAT_OK 
 					case ACK_CHAT_OK:
 						if (bAccept) {
 							
+							//Uid, Chatting Room num is received and chatting window starts
 							ChatWindow chatWin = new ChatWindow(fUid.trim(), reader.nextInt());
 							switchWindow(chatWin, false);
 						}
@@ -494,11 +498,12 @@ public final class MainWindow extends WindowBase {
 		offlineList.setModel(offlineModel);
   }
 	
+	
 	private void askChat(String fUid) {
 		
-		if (Client.FriendsIn.contains(fUid)) {
+		if (Client.FriendsIn.contains(fUid)) { //Uid of someone who wants to talk with 
 			
-			ChatWindow chatWin = new ChatWindow(fUid);
+			ChatWindow chatWin = new ChatWindow(fUid); //chat window executes
 			switchWindow(chatWin, false);
 		} else {
 

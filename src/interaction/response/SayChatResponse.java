@@ -20,39 +20,42 @@ public final class SayChatResponse implements IResponse {
 		
 		EResponse response;
 
-		final int roomId = Integer.parseInt(params[0]);
-		final long now = Long.parseLong(params[1]);
-		final String text = params[2];
+		final int roomId = Integer.parseInt(params[0]); //roomID
+		final long now = Long.parseLong(params[1]); //Time
+		final String text = params[2]; //message for texting
 		
-		final User me = responser.getMeOrNull(); //보낸 사람이 누군지 
+		final User me = responser.getMeOrNull(); //for storing sender
 		final Room room = Server.ChatRooms.getOrDefault(roomId, null); 
-		if (room != null) { //비정상적인 접근 
+		if (room != null) { //if abnormal access occurs
 			
-			if (me != null && room.isIn(me.uid)) {
+			if (me != null && room.isIn(me.uid)) { //Case in chatting room, two participants 
 			
 				final PrintWriter[] writers = new PrintWriter[] {
-						
+					//bring inputstream	
 					Server.Announcers.getOrDefault(room.uid1, null),
 					Server.Announcers.getOrDefault(room.uid2, null),
 				};
-				if (writers[0] != null && writers[1] != null) {
+				if (writers[0] != null && writers[1] != null) { //if available
 					
+					//string which will be printed
 					final StringBuilder lineBuilder = new StringBuilder();
 					lineBuilder.append(DateTime.millisToShortTimeString(now) + ' ');
 					lineBuilder.append(me.name + ": ");
 
+					//Regex Expression for caculator in chatting
 					final String MathExpressionRegex = "([+-]?([0-9]*[.])?[0-9]+)[\\+\\-\\*\\/](([+-]?([0-9]*[.])?[0-9]+))$";
 					EResponse peerResponse = null;
+					//if matches with expression, do calculation function
 					if (text.matches(MathExpressionRegex)) {
 						
-						Pattern numPattern = Pattern.compile("[+-]?([0-9]*[.])?[0-9]+");
+						Pattern numPattern = Pattern.compile("[+-]?([0-9]*[.])?[0-9]+"); //expression for extracting number
 						Matcher numMatcher = numPattern.matcher(text);
 
 						numMatcher.find();
 						String firstStr = numMatcher.group();
-						double first = Double.parseDouble(firstStr);
+						double first = Double.parseDouble(firstStr); //first number
 						numMatcher.find();
-						double second = Double.parseDouble(numMatcher.group());
+						double second = Double.parseDouble(numMatcher.group()); //second number
 						char operation = text.charAt(firstStr.length());
 						
 						double result = -1;
@@ -71,7 +74,7 @@ public final class SayChatResponse implements IResponse {
 							break;
 							
 						case '/':
-							if (second != 0) {
+							if (second != 0) { //if Number divided is 0
 								
 								result = first / second;
 							} else {
@@ -80,7 +83,7 @@ public final class SayChatResponse implements IResponse {
 							}
 							break;
 							
-						default:
+						default: //if unknown operator
 							result = Double.NaN;
 							break;
 						}
@@ -91,14 +94,14 @@ public final class SayChatResponse implements IResponse {
 						
 						peerResponse = EResponse.ANNOUNCE_CALC_CHAT;
 						
-					} else {
+					} else {//if doesn't match with expression, send as string,
 
 						lineBuilder.append(text);	
 						peerResponse = EResponse.ANNOUNCE_SAY_CHAT;
 					}
 					
 					final String line = lineBuilder.toString();
-					for (PrintWriter cWriter : writers) {
+					for (PrintWriter cWriter : writers) { 
 						
 						cWriter.print(peerResponse.getValue());
 						cWriter.print(' ');
@@ -115,7 +118,7 @@ public final class SayChatResponse implements IResponse {
 
 					response = EResponse.SAY_CHAT_ERR;
 				}
-			} else {
+			} else { 
 				
 				response = EResponse.SAY_CHAT_ERR;
 			}

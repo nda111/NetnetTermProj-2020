@@ -9,6 +9,7 @@ import data.EResponse;
 import data.User;
 import interaction.IResponse;
 
+//For sending whom I want to chat with
 public final class AskChatResponse implements IResponse {
 
 	@Override
@@ -20,7 +21,7 @@ public final class AskChatResponse implements IResponse {
 		
 		if (me != null) {
 			
-			final String fUid = params[0];//누구랑 대화하고 싶은지 
+			final String fUid = params[0];
 			final PrintWriter fWriter = Server.Announcers.getOrDefault(fUid, null);
 			if (fWriter != null) {
 				
@@ -30,11 +31,11 @@ public final class AskChatResponse implements IResponse {
 				fWriter.print(2);
 				fWriter.print(' ');
 				
-				fWriter.println(me.uid);
-				fWriter.println(me.name);
+				fWriter.println(me.uid); //when accepted, to check whom sending message is coming in
+				fWriter.println(me.name); //for who requetsed for message
 				fWriter.flush();
 				
-				Server.PendingChats.put(me.uid, fUid);//요청한 사람 uid, 받는사람 uid 
+				Server.PendingChats.put(me.uid, fUid);//requestor uid, receiver uid 
 				response = EResponse.ASK_CHAT_OK;
 			} else {
 				

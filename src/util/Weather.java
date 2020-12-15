@@ -19,12 +19,26 @@ public class Weather {
 
 	private static final String Servicekey = "b3liWapCGfntqc68jXVFcdV8gqJ9p3dgbq6ovnjvSsppK6ZZtNpMQEo96IEZ6GSGy45LREk3NVHVe9VwXjQfDw%3D%3D";
 
-	private String nx = "62";// 위도
-	private String ny = "124";// 경도 (위도 경도는 참고로 중원구 복정동 기준)
-	private String dataType = "JSON"; // 데이터 타입
+	private String nx = "62";//latitude
+	private String ny = "124";// longtitude (Based on Joongwon gu- Bokjeong dong)
+	private String dataType = "JSON"; // data type
 	private String baseDate = null;
 	private String baseTime = null;
 
+	/*VilageFcstInfoService-getUltraSrtNcst  api can only detect time 2:00,5:00, 8:00, 11:00, 14:00, 17:00, 20:00,23:00  (by 3 hour term) 
+     * Therefore, server time is fixed as below.*/
+    
+    /*2:00 >= and <5:00: fixed into 2:00
+     5:00 >= and <8:00: fixed into 5:00
+     8:00 >= and <11:00: fixed into 8:00
+     11:00 >= and <14:00: fixed into 11:00
+     14:00 >= and <17:00: fixed into 14:00
+     17:00 >= and <20:00: fixed into 17:00
+     20:00 >= and <23:00: fixed into 20:00
+     23:00 >= and <2:00: fixed into 23:00
+     */
+
+	
 	public Weather(int nx, int ny, String dataType, long timeInMillis) {
 
 		this.nx = Integer.toString(nx);
@@ -33,9 +47,9 @@ public class Weather {
 
         LocalDateTime now = LocalDateTime.now();
         int hour = ((now.getHour() + 1) / 3 * 3 - 1) % 24;
-        if (now.getHour() < 2) {
+        if (now.getHour() < 2) { //if < 2:00
         	
-        	now = now.minusDays(1);
+        	now = now.minusDays(1); // date should be one day before server day because it will be fixed in 23:00
         	hour = 23;
         }
         
@@ -49,13 +63,13 @@ public class Weather {
 		try {
 
 			urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + Servicekey); /* Service Key */
-			urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(page), "UTF-8")); /* 페이지번호 */
-			urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(rows), "UTF-8")); /* 한 페이지 결과 수 */
-			urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8")); /* 요청자료형식 */
-			urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /* 15년 12월 1일발표 */
-			urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode(baseTime, "UTF-8")); /* 05시 발표 */
-			urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(nx, "UTF-8")); /* 예보지점 X 좌표값 */
-			urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(ny, "UTF-8")); /* 예보지점의 Y 좌표값 */
+			urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(page), "UTF-8")); /* page number */
+			urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(rows), "UTF-8")); /* result nums from one page */
+			urlBuilder.append("&" + URLEncoder.encode("dataType", "UTF-8") + "=" + URLEncoder.encode(dataType, "UTF-8")); /* Request data format */
+			urlBuilder.append("&" + URLEncoder.encode("base_date", "UTF-8") + "=" + URLEncoder.encode(baseDate, "UTF-8")); /* base date for getting weather information*/
+			urlBuilder.append("&" + URLEncoder.encode("base_time", "UTF-8") + "=" + URLEncoder.encode(baseTime, "UTF-8")); /* basetime for getting weather information*/
+			urlBuilder.append("&" + URLEncoder.encode("nx", "UTF-8") + "=" + URLEncoder.encode(nx, "UTF-8")); /* X coordinate value of the forecast point */
+			urlBuilder.append("&" + URLEncoder.encode("ny", "UTF-8") + "=" + URLEncoder.encode(ny, "UTF-8")); /* Y coordinate value of the forecast point */
 		} catch (UnsupportedEncodingException e) {
 
 			e.printStackTrace();
@@ -67,41 +81,41 @@ public class Weather {
 			
 			URL url = new URL(urlBuilder.toString());
 
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection(); // HttpUrlConnection 클래스 생성
-			conn.setRequestMethod("GET"); // 요청방식 설정 (GET)
-			conn.setRequestProperty("Content-type", "application/json");// 헤더의 메소드 정의
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection(); // HttpUrlConnection class 
+			conn.setRequestMethod("GET"); // request way set(GET)
+			conn.setRequestProperty("Content-type", "application/json");// header method 
 
 			BufferedReader rd;
-			// 프로토콜 반환 코드가 200이상 300이하인 경우 스트림으로 반환 결과값 받기
+			// if protocol response code is 200>= and <=300 get return result by stream
 			if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
 				
 				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			}
-			// 그 이외인 경우 에러 발생
+			// when error occurs
 			else {
 				
 				rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 				
 				return null;
 			}
-			StringBuilder sb = new StringBuilder(); // 문자열을 담기 위한 객체
+			StringBuilder sb = new StringBuilder(); // object for getting string
 			String line;
 			while ((line = rd.readLine()) != null) {
 				
 				sb.append(line);
 			}
 			rd.close();
-			conn.disconnect();// 접속해제
+			conn.disconnect();// disconnection
 
-			String stringJson = sb.toString(); // stringbuilder-> string으로 변환하기
+			String stringJson = sb.toString(); // stringbuilder into  string
 
-			// string -> jsonobject 로
-			JSONParser jsonParser = new JSONParser();// json 객체 만들기, parser통해 파싱하기
-			JSONObject jsonObj = (JSONObject) jsonParser.parse(stringJson);// parser로 문자열 데이터를 json 데이터로 변환
-			JSONObject parse_response = (JSONObject) jsonObj.get("response"); // response key값에 맞는 Value인 JSON객체를 가져오기
-			JSONObject parse_body = (JSONObject) parse_response.get("body"); // response 로 부터 body 찾아오기
-			JSONObject parse_items = (JSONObject) parse_body.get("items"); // body 로 부터 items 받아오기
-			JSONArray parse_itemlist = (JSONArray) parse_items.get("item"); // items로 부터 itemlist 를 받아오기 itemlist : 뒤에 [ 로 시작하므로 jsonarray
+			// string -> jsonobject 
+			JSONParser jsonParser = new JSONParser();// json object creation, parsing through parser
+			JSONObject jsonObj = (JSONObject) jsonParser.parse(stringJson);// Convert string data to json data with parser
+			JSONObject parse_response = (JSONObject) jsonObj.get("response"); // Import JSON objects whose value corresponds to the response key value
+			JSONObject parse_body = (JSONObject) parse_response.get("body"); // Find body from response
+			JSONObject parse_items = (JSONObject) parse_body.get("items"); // Get Items from body
+			JSONArray parse_itemlist = (JSONArray) parse_items.get("item"); // get item list from items item list : jsonarray after []
 			
 			return parse_itemlist;
 		} catch (IOException | ParseException e) {
@@ -123,6 +137,8 @@ public class Weather {
 		for (int i = 0; i < parse_itemlist.size(); i++) {
 			JSONObject weatherObject = (JSONObject) parse_itemlist.get(i);
 
+			//Based on Weather Open data Api (동네예보조회 서비스)
+			//category 'SKY' state is divided into three parts, sunny, cloudy, and bad
 			String[] skySunny = { "0", "1", "2", "3", "4", "5" };
 			String[] skyCloudy = { "6", "7", "8" };
 			String[] skyBad = { "9", "10" };
@@ -133,7 +149,7 @@ public class Weather {
 			String baseTimes = String.valueOf(weatherObject.get("baseTime"));
 
 			String skyState = "";
-			// 동네예보 항목 값에 'SKY' 가 있을 경우
+			// If therer is 'SKY' in category
 			if (skyKind.contains("SKY")) {
 				
 				if (Arrays.asList(skySunny).contains(skyValue)) {

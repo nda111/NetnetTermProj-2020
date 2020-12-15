@@ -48,13 +48,13 @@ public final class ChatWindow extends WindowBase {
 		
 		super();
 
-		joinStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
-		chatStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
-		calcStyle.addAttribute(StyleConstants.Foreground, Color.GREEN);
-		calcStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
-		systemStyle.addAttribute(StyleConstants.Foreground, Color.LIGHT_GRAY);
-		systemStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
-		byeStyle.addAttribute(StyleConstants.Foreground, Color.RED);
+//		joinStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
+//		chatStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
+//		calcStyle.addAttribute(StyleConstants.Foreground, Color.GREEN);
+//		calcStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
+//		systemStyle.addAttribute(StyleConstants.Foreground, Color.LIGHT_GRAY);
+//		systemStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
+//		byeStyle.addAttribute(StyleConstants.Foreground, Color.RED);
 		
 		this.setTitle(Client.Friends.get(fUid).name);
 		setChatLocked(true);
@@ -65,21 +65,21 @@ public final class ChatWindow extends WindowBase {
 			protected void handle(EResponse response, Scanner reader, PrintWriter writer) {
 				
 				switch (response) {
-				
+				//request is sent correctly
 				case ASK_CHAT_OK:
 					printText("Please wait until the opponent joins.", systemStyle);
 					break;
-					
+				//if offline	
 				case ASK_CHAT_OFFLINE:
 					Client.FriendsIn.remove(fUid);
 					JOptionPane.showMessageDialog(null, "Opponent is offline.");
 					backToParent();
 					break;
-					
+				//if error occurs	
 				case ASK_CHAT_ERR:
 				default:
 					JOptionPane.showMessageDialog(null, "Unknown Error: Please try again.");
-					backToParent();
+					backToParent(); //go back to parent
 					break;
 				}
 			}
@@ -90,13 +90,13 @@ public final class ChatWindow extends WindowBase {
 		
 		super();
 
-		joinStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
-		chatStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
-		calcStyle.addAttribute(StyleConstants.Foreground, Color.GREEN);
-		calcStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
-		systemStyle.addAttribute(StyleConstants.Foreground, Color.LIGHT_GRAY);
-		systemStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
-		byeStyle.addAttribute(StyleConstants.Foreground, Color.RED);
+//		joinStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
+//		chatStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
+//		calcStyle.addAttribute(StyleConstants.Foreground, Color.GREEN);
+//		calcStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
+//		systemStyle.addAttribute(StyleConstants.Foreground, Color.LIGHT_GRAY);
+//		systemStyle.addAttribute(StyleConstants.Bold, Boolean.valueOf(true));
+//		byeStyle.addAttribute(StyleConstants.Foreground, Color.RED);
 
 		this.setTitle(Client.Friends.get(fUid).name);
 		this.roomIdStr = Integer.toString(roomId);
@@ -203,7 +203,7 @@ public final class ChatWindow extends WindowBase {
 	}
 	
 	@Override
-	public void backToParent() {
+	public void backToParent() { //if wants to end chat
 		
 		new RequestBase(ERequest.END_CHAT, new String[] { roomIdStr }) {
 
@@ -225,7 +225,7 @@ public final class ChatWindow extends WindowBase {
 	}
 	
 	private void sendChat(String text) {
-		
+		//case that is unavilable to send message to oppponent
 		if (!isLocked) {
 		
 			final String nowStr = Long.toString(System.currentTimeMillis());
@@ -238,12 +238,13 @@ public final class ChatWindow extends WindowBase {
 					
 					switch (response) {
 					
+					//if SAY_CHAT_OK, unlock again
 					case SAY_CHAT_OK:
 						setChatLocked(false);
 						chatTextField.setText("");
 						chatTextField.grabFocus();
 						break;
-						
+					//if anyone who goes out from room, room disappears
 					case SAY_CHAT_NO_ROOM:
 						printText("\'" + getTitle() + "\' has left.", byeStyle);
 						setChatLocked(true);
