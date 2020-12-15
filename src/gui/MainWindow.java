@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
@@ -28,6 +30,8 @@ import app.Client;
 import data.ERequest;
 import data.EResponse;
 import data.User;
+import gui.dialog.EditInfoDialog;
+import gui.dialog.UserInfoDialog;
 import interaction.RequestBase;
 import util.Weather;
 
@@ -35,6 +39,7 @@ public final class MainWindow extends WindowBase {
 
 	private JTextField friendTextField;
 	private JButton addFriendButton;
+	private JButton editButton;
 	private JLabel meLabel;
 	private JList<String> onlineList;
 	private JList<String> offlineList;
@@ -78,13 +83,21 @@ public final class MainWindow extends WindowBase {
 		// addFriendButton
 		addFriendButton = new JButton("Add");
 		topContainer.add(addFriendButton, BorderLayout.EAST);
+		
+		// nameContainer
+		BorderLayout nameLayout = new BorderLayout();
+		JPanel nameContainer = new JPanel(nameLayout);
+		nameContainer.setBorder(BorderFactory.createEmptyBorder(5, 0, 3, 0));
+		topContainer.add(nameContainer, BorderLayout.SOUTH);
+		
+		// editButton
+		editButton = new JButton("Edit");
+		nameContainer.add(editButton, BorderLayout.WEST);
 
 		// meLabel
 		meLabel = new JLabel("Me");
-		// meLabel.setText(Client.Me);
 		meLabel.setBackground(Color.WHITE);
-		meLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 3, 0));
-		topContainer.add(meLabel, BorderLayout.SOUTH);
+		nameContainer.add(meLabel, BorderLayout.CENTER);
 
 		//
 		// Fill Container
@@ -355,9 +368,37 @@ public final class MainWindow extends WindowBase {
 				
 				if (selectedFriend != null) {
 					
-					// TODO: Show info
-					JOptionPane.showMessageDialog(MainWindow.this, "Show Info: " + selectedFriend.name + " (" + selectedFriend.uid + ")");
+					MainWindow.this.setEnabled(false);
+					UserInfoDialog dialog = new UserInfoDialog(MainWindow.this, selectedFriend);
+					dialog.setVisible(true);
 				}
+			}
+		});
+		
+		editButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				MainWindow.this.setEnabled(false);
+				EditInfoDialog dialog = new EditInfoDialog(MainWindow.this);
+				dialog.addWindowListener(new WindowAdapter() {
+
+					@Override
+					public void windowClosing(WindowEvent e) {
+
+						if (dialog.newName != null) {
+							
+							Client.Me.name = dialog.newName;
+							MainWindow.this.meLabel.setText(dialog.newName);
+						}
+						if (dialog.newMessage != null) {
+							
+							Client.Me.personalMessage = dialog.newMessage;
+						}
+					}
+				});
+				dialog.setVisible(true);
 			}
 		});
 	}
@@ -372,6 +413,7 @@ public final class MainWindow extends WindowBase {
 		case ANNOUNCE_ADD_FRIEND:
 		case ANNOUNCE_FRIEND_IN:
 		case ANNOUNCE_FRIEND_OUT:
+		case ANNOUNCE_EDIT_INF:
 			updateFriendList();
 			break;
         
